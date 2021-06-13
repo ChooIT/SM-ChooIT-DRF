@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from accounts.models import User
+from accounts.models import User, Tag, UserTag
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -22,3 +22,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         field = ['email', 'password', 'gender', 'nickname']
+
+
+class CreateUserTagSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    tag = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all())
+
+    class Meta:
+        model = UserTag
+        field = ['user', 'tag']
