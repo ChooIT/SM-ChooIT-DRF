@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from accounts.serializers import CreateUserSerializer, CreateUserTagSerializer
 User = get_user_model()
 
+from accounts.utils import get_nickname
+
 
 @api_view(['GET'])
 def is_registered_email(request):
