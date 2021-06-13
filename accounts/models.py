@@ -83,8 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
     )
     nickname = models.CharField(max_length=35)
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now, auto_now_add=True)
-    updated_at = models.DateTimeField(_("date_updated"), default=timezone.now, auto_now=True)
+    created_at = models.DateTimeField(_("date joined"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("date_updated"), auto_now=True)
 
     objects = UserManager()
 
@@ -135,7 +135,7 @@ class Tag(models.Model):
 
 class UserTag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL)
+    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
