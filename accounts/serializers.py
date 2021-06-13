@@ -20,7 +20,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        field = ['email', 'password', 'gender', 'nickname']
+        fields = ['email', 'password', 'gender', 'nickname']
 
 
 class CreateUserTagSerializer(serializers.ModelSerializer):
@@ -29,4 +29,4 @@ class CreateUserTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTag
-        field = ['user', 'tag']
+        fields = ['user', 'tag']
