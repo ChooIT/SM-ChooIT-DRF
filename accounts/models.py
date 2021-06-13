@@ -65,9 +65,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )
-    is_active = models.BooleanField(
+    is_active = models.IntegerField(
         _("active"),
-        default=True,
+        default=0,
         help_text=_(
             "Designates whether this user should be treated as active. "
             "Unselect this instead of deleting accounts."
@@ -106,11 +106,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Send an email to this User.
-        """
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    # def email_user(self, subject, message, from_email=None, **kwargs):
+    #     """
+    #     Send an email to this User.
+    #     """
+    #     send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 class Nickname(models.Model):
