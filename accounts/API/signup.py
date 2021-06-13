@@ -8,7 +8,7 @@ from accounts.serializers import CreateUserSerializer, CreateUserTagSerializer
 
 @api_view(['GET'])
 def is_registered_email(request):
-    email = request.GET.query_params.get('email')
+    email = request.GET.get('email')
     try:
         user = User.objects.get(email=email)
         return Response({
