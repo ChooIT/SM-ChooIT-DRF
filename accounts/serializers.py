@@ -3,7 +3,7 @@ from rest_framework import serializers
 from accounts.models import User, Tag, UserTag
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True, write_only=True)
 
     def create(self, validated_data):
@@ -34,3 +34,11 @@ class CreateUserTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTag
         fields = ['user', 'tag']
+
+
+class UserTagSerializer(serializers.ModelSerializer):
+    tag = serializers.SlugRelatedField(slug_field='tag_text', read_only=True)
+
+    class Meta:
+        model = UserTag
+        fields = ['tag']

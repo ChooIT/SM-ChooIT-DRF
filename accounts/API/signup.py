@@ -5,10 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.contrib.auth import get_user_model
-from accounts.serializers import CreateUserSerializer, CreateUserTagSerializer
+from accounts.serializers import UserSerializer, CreateUserTagSerializer
 User = get_user_model()
-
-from accounts.utils import get_nickname
 
 
 @api_view(['GET'])
@@ -38,7 +36,7 @@ def create_user(request):
     """
     data = request.data
     data['emoji'], data['nickname'] = get_nickname()
-    serializer = CreateUserSerializer(data=request.data)
+    serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({
