@@ -17,7 +17,7 @@ from django_extensions.db.models import TimeStampedModel
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, email, type, password, **extra_fields):
+    def _create_user(self, email, type, password=None, **extra_fields):
         if not email:
             raise ValueError("The given email must be set")
         email = self.normalize_email(email)
@@ -31,9 +31,10 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, type, password, **extra_fields)
 
-    def create_superuser(self, email, type, password, **extra_fields):
+    def create_superuser(self, email, type, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
@@ -55,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("user type"),
         max_length=1,
         choices=(
-            ("i", "indivisual"),
+            ("i", "individual"),
             ("b", "business"),
             ("a", "ADMIN"),
         ),
@@ -65,14 +66,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )
-    is_active = models.IntegerField(
+    is_active = models.BooleanField(
         _("active"),
-        default=0,
+        default=False,
         help_text=_(
             "Designates whether this user should be treated as active. "
             "Unselect this instead of deleting accounts."
         ),
     )
+    active_level = models.IntegerField(default=0)
     gender = models.CharField(
         _("gender type"),
         max_length=1,
@@ -127,7 +129,7 @@ class Tag(models.Model):
     tag_code = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return "{tag_code}".format(tag_code=self.tag_code)
+        return "[%d] %s" % (self.tag_code, self.tag_text)
 
     class Meta:
         ordering = ['tag_code']
