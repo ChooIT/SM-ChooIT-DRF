@@ -73,7 +73,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             "Unselect this instead of deleting accounts."
         ),
     )
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    gender = models.CharField(
+        _("gender type"),
+        max_length=1,
+        choices=(
+            ('w', 'woman'),
+            ('m', 'man'),
+            ('n', 'null')
+        )
+    )
+    nickname = models.CharField(max_length=35)
+    created_at = models.DateTimeField(_("date joined"), default=timezone.now, auto_now_add=True)
+    updated_at = models.DateTimeField(_("date_updated"), default=timezone.now, auto_now=True)
 
     objects = UserManager()
 
