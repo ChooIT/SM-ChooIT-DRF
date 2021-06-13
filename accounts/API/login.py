@@ -32,4 +32,4 @@ class LoginView(ObtainJSONWebToken):
             "data": {
                 "token": response.data['token']
             }
-        })
+        }, status=status.HTTP_201_CREATED)
