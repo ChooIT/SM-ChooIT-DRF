@@ -23,8 +23,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class CreateUserTagSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    tag = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all())
+    user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email')
+    tag = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='tag_code')
+
+    def __init__(self, *args, **kwargs):
+        many = kwargs.pop('many', True)
+        super(CreateUserTagSerializer, self).__init__(many=many, *args, **kwargs)
 
     class Meta:
         model = UserTag

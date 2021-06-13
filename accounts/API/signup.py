@@ -4,7 +4,6 @@ from rest_framework import status
 
 from django.contrib.auth import get_user_model
 from accounts.serializers import CreateUserSerializer, CreateUserTagSerializer
-
 User = get_user_model()
 
 
@@ -57,11 +56,11 @@ def create_new_favorite_tag(request):
     """
     [
         {
-            "email": "test@test.com",
+            "user": "test@test.com",
             "tag": 1
         },
         {
-            "email": "test@test.com",
+            "user": "test@test.com",
             "tag": 2
         },
         ...
@@ -70,7 +69,7 @@ def create_new_favorite_tag(request):
     serializer = CreateUserTagSerializer(data=request.data, many=True)
     if serializer.is_valid():
         serializer.save()
-        upgrade_active_level(user_email=request.data.get("email"))
+        upgrade_active_level(user_email=request.data[0].get("user"))
         return Response({
             "status": "success",
             "message": "성공적으로 선호 태그를 등록했습니다."
