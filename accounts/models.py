@@ -111,3 +111,32 @@ class User(AbstractBaseUser, PermissionsMixin):
         Send an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Nickname(models.Model):
+    adj = models.CharField(max_length=6)
+    noun = models.CharField(max_length=8)
+    number = models.IntegerField()
+
+    class Meta:
+        ordering = ['adj']
+
+
+class Tag(models.Model):
+    tag_text = models.CharField(max_length=10, null=False)
+    tag_code = models.AutoField(primary_key=True)
+
+    def __str__(self):
+        return "{tag_code}".format(tag_code=self.tag_code)
+
+    class Meta:
+        ordering = ['tag_code']
+
+
+class UserTag(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
