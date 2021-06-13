@@ -1,3 +1,5 @@
+from accounts.utils import get_nickname
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -32,12 +34,18 @@ def create_user(request):
         "type": "i"
     }
     """
+    data = request.data
+    data['emoji'], data['nickname'] = get_nickname()
     serializer = CreateUserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({
             "status": "success",
-            "message": "회원가입에 성공하였습니다."
+            "message": "회원가입에 성공하였습니다.",
+            "data": {
+                "nickname": data['nickname'],
+                "emoji": data['emoji']
+            }
         }, status=status.HTTP_201_CREATED)
 
 

@@ -84,7 +84,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             ('n', 'null')
         )
     )
-    nickname = models.CharField(max_length=35)
+    nickname = models.CharField(max_length=35, null=True)
+    emoji = models.CharField(max_length=3, null=True)
     created_at = models.DateTimeField(_("date joined"), auto_now_add=True)
     updated_at = models.DateTimeField(_("date_updated"), auto_now=True)
 
@@ -116,12 +117,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Nickname(models.Model):
-    adj = models.CharField(max_length=6)
-    noun = models.CharField(max_length=8)
-    number = models.IntegerField()
+    part = models.CharField(
+        _("품사"),
+        max_length=1,
+        choices=(
+            ("a", "형용사"),
+            ("n", "명사")
+        ),
+        default="a"
+    )
+    content = models.CharField(max_length=10, null=True)
+    emoji = models.CharField(max_length=3, null=True)
 
     class Meta:
-        ordering = ['adj']
+        ordering = ['part']
+
+
+class NicknameArchive(models.Model):
+    nickname = models.CharField(max_length=30)
+    count = models.IntegerField(default=1)
+
+    def __str__(self):
+        return "%s%d" % (self.nickname, self.count)
 
 
 class Tag(models.Model):
