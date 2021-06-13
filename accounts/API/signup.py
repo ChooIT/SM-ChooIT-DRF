@@ -1,9 +1,11 @@
-from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.contrib.auth import get_user_model
 from accounts.serializers import CreateUserSerializer, CreateUserTagSerializer
+
+User = get_user_model()
 
 
 @api_view(['GET'])
