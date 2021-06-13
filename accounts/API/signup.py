@@ -18,6 +18,16 @@ def is_registered_email(request):
 
 @api_view(['POST'])
 def create_user(request):
+    """
+    {
+        "email": "test@test.com",
+        "password": "password",
+        "username": "한지용",
+        "gender": "m",
+        "nickname": "황제",
+        "type": "i"
+    }
+    """
     serializer = CreateUserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
