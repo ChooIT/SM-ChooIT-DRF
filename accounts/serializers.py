@@ -11,6 +11,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             gender=validated_data['gender'],
             nickname=validated_data['nickname'],
+            emoji=validated_data['emoji'],
             type=validated_data['type']
         )
         user.set_password(validated_data['password'])

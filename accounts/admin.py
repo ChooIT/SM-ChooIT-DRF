@@ -19,4 +19,4 @@ class UserTagAdmin(admin.ModelAdmin):
 
 @admin.register(Nickname)
 class NicknameAdmin(admin.ModelAdmin):
-    list_display = ['adj', 'noun', 'number']
+    list_display = ['part', 'content', 'emoji']
