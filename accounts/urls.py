@@ -1,5 +1,5 @@
 from django.urls import path
-from .API import signup, profile
+from .views import signup, profile
 from rest_framework_jwt.views import ObtainJSONWebToken
 
 
