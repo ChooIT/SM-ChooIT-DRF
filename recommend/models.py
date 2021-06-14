@@ -1,16 +1,26 @@
 from django.db import models
+from django.utils import timezone
 
 from accounts.models import Tag
 
 
+class Category(models.Model):
+    category_name = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s" % (self.category_name)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
 class Product(models.Model):
     prod_no = models.AutoField(primary_key=True)
+    prod_category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False, default="1")
     prod_name = models.CharField(max_length=100, null=False)
     prod_manufacturer = models.CharField(max_length=30)
     prod_price = models.CharField(max_length=10, null=False)
-    prod_func1 = models.CharField(max_length=10)
-    prod_func2 = models.CharField(max_length=10)
-    prod_func3 = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -33,7 +43,7 @@ class ProductImage(models.Model):
 
 
 class ProductTag(models.Model):
-    prod = models.ForeignKey(Product, on_delete=models.CASCADE)
+    prod = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='tags')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

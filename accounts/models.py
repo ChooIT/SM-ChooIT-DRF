@@ -146,7 +146,7 @@ class Tag(models.Model):
     tag_code = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return "[%d] %s" % (self.tag_code, self.tag_text)
+        return self.tag_text
 
     class Meta:
         ordering = ['tag_code']
