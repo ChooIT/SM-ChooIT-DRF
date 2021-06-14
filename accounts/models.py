@@ -34,6 +34,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, type, password, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
@@ -55,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("user type"),
         max_length=1,
         choices=(
-            ("i", "indivisual"),
+            ("i", "individual"),
             ("b", "business"),
             ("a", "ADMIN"),
         ),
@@ -67,12 +68,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active = models.BooleanField(
         _("active"),
-        default=True,
+        default=False,
         help_text=_(
             "Designates whether this user should be treated as active. "
             "Unselect this instead of deleting accounts."
         ),
     )
+    active_level = models.IntegerField(default=0)
     gender = models.CharField(
         _("gender type"),
         max_length=1,
@@ -82,9 +84,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             ('n', 'null')
         )
     )
-    nickname = models.CharField(max_length=35)
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now, auto_now_add=True)
-    updated_at = models.DateTimeField(_("date_updated"), default=timezone.now, auto_now=True)
+    nickname = models.CharField(max_length=35, null=True)
+    emoji = models.CharField(max_length=3, null=True)
+    created_at = models.DateTimeField(_("date joined"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("date_updated"), auto_now=True)
 
     objects = UserManager()
 
@@ -106,20 +109,36 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Send an email to this User.
-        """
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    # def email_user(self, subject, message, from_email=None, **kwargs):
+    #     """
+    #     Send an email to this User.
+    #     """
+    #     send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 class Nickname(models.Model):
-    adj = models.CharField(max_length=6)
-    noun = models.CharField(max_length=8)
-    number = models.IntegerField()
+    part = models.CharField(
+        _("품사"),
+        max_length=1,
+        choices=(
+            ("a", "형용사"),
+            ("n", "명사")
+        ),
+        default="a"
+    )
+    content = models.CharField(max_length=10, null=True)
+    emoji = models.CharField(max_length=3, null=True)
 
     class Meta:
-        ordering = ['adj']
+        ordering = ['part']
+
+
+class NicknameArchive(models.Model):
+    nickname = models.CharField(max_length=30)
+    count = models.IntegerField(default=1)
+
+    def __str__(self):
+        return "%s%d" % (self.nickname, self.count)
 
 
 class Tag(models.Model):
@@ -127,7 +146,7 @@ class Tag(models.Model):
     tag_code = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return "{tag_code}".format(tag_code=self.tag_code)
+        return "[%d] %s" % (self.tag_code, self.tag_text)
 
     class Meta:
         ordering = ['tag_code']
@@ -135,7 +154,7 @@ class Tag(models.Model):
 
 class UserTag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL)
+    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

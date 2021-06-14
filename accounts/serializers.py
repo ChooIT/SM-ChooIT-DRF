@@ -1,19 +1,18 @@
 from rest_framework import serializers
 
-from accounts.models import User
+from accounts.models import User, Tag, UserTag
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True, write_only=True)
-    nickname = serializers.CharField(required=True)
 
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],
-            username=validated_data['username'],
             gender=validated_data['gender'],
-            nickname=validated_data['nickname']
+            nickname=validated_data['nickname'],
+            emoji=validated_data['emoji'],
+            type=validated_data['type']
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -21,4 +20,25 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        field = ['email', 'password', 'gender', 'nickname']
+        fields = ['email', 'password', 'gender', 'nickname', 'emoji', 'type']
+
+
+class CreateUserTagSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email')
+    tag = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='tag_code')
+
+    def __init__(self, *args, **kwargs):
+        many = kwargs.pop('many', True)
+        super(CreateUserTagSerializer, self).__init__(many=many, *args, **kwargs)
+
+    class Meta:
+        model = UserTag
+        fields = ['user', 'tag']
+
+
+class UserTagSerializer(serializers.ModelSerializer):
+    tag = serializers.SlugRelatedField(slug_field='tag_text', read_only=True)
+
+    class Meta:
+        model = UserTag
+        fields = ['tag']
