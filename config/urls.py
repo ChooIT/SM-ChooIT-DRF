@@ -44,7 +44,7 @@ if settings.DEBUG:
 
     schema_view = get_schema_view(
         openapi.Info(
-            title="Snippets API",
+            title="Snippets views",
             default_version="v1",
             description="Test description",
             terms_of_service="https://www.google.com/policies/terms/",
@@ -56,7 +56,7 @@ if settings.DEBUG:
         permission_classes=(permissions.AllowAny,),
     )
     urlpatterns += [
-        # 자동 API 문서 생성
+        # 자동 views 문서 생성
         path(
             "swagger<str:format>",
             schema_view.without_ui(cache_timeout=0),
