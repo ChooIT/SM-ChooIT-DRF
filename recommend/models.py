@@ -60,3 +60,12 @@ class SearchLog(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class Favorite(models.Model):
+    fav_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fav_prod = models.ForeignKey(Product, on_delete=models.CASCADE)
+    fav_created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fav_created_at']

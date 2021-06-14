@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from recommend.models import Product, ProductTag, Category
+from recommend.models import Product, ProductTag, Favorite
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class ProductTagSerializer(serializers.ModelSerializer):
@@ -26,3 +28,12 @@ class ProductSerializer(serializers.ModelSerializer):
             'updated_at',
             'tags'
         ]
+
+
+class CreateFavoriteSerializer(serializers.ModelSerializer):
+    fav_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    fav_prod = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+
+    class Meta:
+        model = Favorite
+        fields = ['fav_user', 'fav_prod', 'fav_created_at']
