@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 from accounts.models import Tag
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -45,6 +47,15 @@ class ProductImage(models.Model):
 class ProductTag(models.Model):
     prod = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='tags')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class SearchLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prod = models.ForeignKey(Product, on_delete=models.DO_NOTHING, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
