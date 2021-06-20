@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recommend.models import Product, SearchLog, Favorite
+from recommend.models import Product, SearchLog
 from recommend.serializers import ProductSerializer, CreateFavoriteSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
