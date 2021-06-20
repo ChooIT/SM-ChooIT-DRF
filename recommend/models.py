@@ -52,6 +52,38 @@ class ProductTag(models.Model):
         ordering = ['-created_at']
 
 
+class Review(models.Model):
+    review_no = models.AutoField(primary_key=True)
+    user_no = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default="유저 정보 없음")
+    prod_no = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    review_title = models.CharField(max_length=50, null=True)
+    review_text = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class ReviewImage(models.Model):
+    review_no = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review_file_path = models.CharField(max_length=200)
+    review_is_thumbnail = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class ReviewTag(models.Model):
+    review_no = models.ForeignKey(Review, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
 class SearchLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prod = models.ForeignKey(Product, on_delete=models.DO_NOTHING, null=True)
