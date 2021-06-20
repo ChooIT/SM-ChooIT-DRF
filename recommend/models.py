@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 from accounts.models import Tag
 from django.contrib.auth import get_user_model
@@ -11,7 +10,7 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s" % (self.category_name)
+        return self.category_name
 
     class Meta:
         ordering = ['-created_at']

@@ -45,9 +45,9 @@ if settings.DEBUG:
 
     schema_view = get_schema_view(
         openapi.Info(
-            title="Snippets views",
+            title="ChooIT Views",
             default_version="v1",
-            description="Test description",
+            description="ChooIT의 API문서 입니다.",
             terms_of_service="https://www.google.com/policies/terms/",
             contact=openapi.Contact(email="contact@snippets.local"),
             license=openapi.License(name="BSD License"),
