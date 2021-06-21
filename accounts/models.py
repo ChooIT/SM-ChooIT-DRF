@@ -154,7 +154,7 @@ class Tag(models.Model):
 
 class UserTag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tags')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=False, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
