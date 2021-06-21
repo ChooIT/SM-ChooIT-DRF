@@ -5,6 +5,7 @@ from accounts.models import User, Tag, UserTag
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True, write_only=True)
+    tags = serializers.StringRelatedField(read_only=True, many=True)
 
     def create(self, validated_data):
         user = User(
@@ -20,25 +21,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'gender', 'nickname', 'emoji', 'type']
+        fields = ['email', 'password', 'gender', 'nickname', 'emoji', 'type', 'tags']
 
 
 class CreateUserTagSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email')
-    tag = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='tag_code')
+    tag = serializers.ListField()
 
-    def __init__(self, *args, **kwargs):
-        many = kwargs.pop('many', True)
-        super(CreateUserTagSerializer, self).__init__(many=many, *args, **kwargs)
+    def create(self, validated_data):
+        user = User.objects.get(email=validated_data['user'])
+        tags = [Tag(tag_code=code) for code in validated_data['tag']]
+        user_tags = []
+        for tag in tags:
+            user_tags.append(UserTag(user=user, tag=tag))
+        return UserTag.objects.bulk_create(user_tags)
 
     class Meta:
         model = UserTag
         fields = ['user', 'tag']
-
-
-class UserTagSerializer(serializers.ModelSerializer):
-    tag = serializers.SlugRelatedField(slug_field='tag_text', read_only=True)
-
-    class Meta:
-        model = UserTag
-        fields = ['tag']
