@@ -5,7 +5,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from recommend.models import Review
+from recommend.models import Review, ReviewImage
 from recommend.serializers import ImageSerializer, ReviewSerializer, ReviewImageSerializer
 from recommend.utils import get_first_p_tag_value
 from django.contrib.auth import get_user_model
@@ -56,3 +56,39 @@ def review_retrieve(request, pk=None):
     review = get_object_or_404(queryset, pk=pk)
     serializer = ReviewSerializer(review)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def create_review_image(review_no, review_img_no_list, thumbnail_no):
+    for no in review_img_no_list:
+        image = ReviewImage.objects.create(
+            review_no_id=review_no,
+            review_img_no_id=no
+        )
+        if no == thumbnail_no:
+            image.review_is_thumbnail = True
+            image.save()
+    return
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def post_new_review(request):
+    request.data['user_no'] = request.user.id
+    images = request.data.pop('images')
+
+    serializer = ReviewSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        review_no = serializer.data.get('review_no')
+    else:
+        return Response({
+            "status": "fail",
+            "message": "리뷰 등록 실패",
+            "data": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    create_review_image(review_no, images.get('review_img_no'), images.get('thumbnail'))
+    return Response({
+            "status": "success",
+            "message": "리뷰 등록 성공",
+        }, status=status.HTTP_201_CREATED)
