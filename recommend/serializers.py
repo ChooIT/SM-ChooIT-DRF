@@ -41,3 +41,34 @@ class CreateFavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = ['fav_user', 'fav_prod', 'fav_created_at']
+
+
+class ReviewImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewImage
+        fields = [
+            "review_img_no",
+            "review_is_thumbnail",
+        ]
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    review_images = ReviewImageSerializer(many=True, read_only=True)
+
+    def create(self, validated_data):
+        return Review.objects.create(**validated_data)
+
+    class Meta:
+        model = Review
+        fields = [
+            'user_no',
+            'prod_no',
+            'review_title',
+            'review_text',
+            'func1_rate',
+            'func2_rate',
+            'func3_rate',
+            'review_images',
+            'created_at',
+            'updated_at'
+        ]

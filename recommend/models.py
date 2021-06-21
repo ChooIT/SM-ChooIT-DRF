@@ -116,6 +116,7 @@ class ReviewImage(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        unique_together = ['review_no', 'review_img_no']
 
 
 class ReviewTag(models.Model):
