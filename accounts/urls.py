@@ -10,4 +10,7 @@ urlpatterns = [
     path('signup/product/', signup.create_using_prod_history),
     path('login/', profile.LoginView.as_view()),
     path('detail/', profile.get_profile_detail),
+    path('detail/favorite/', profile.get_user_favorite_list),
+    path('detail/log/', profile.get_user_search_log_list),
+    path('detail/review/', profile.get_user_review_list)
 ]

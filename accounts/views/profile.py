@@ -9,6 +9,10 @@ from config.settings.authentication import JSONWebTokenAuthentication
 from accounts.serializers import UserSerializer
 
 from django.contrib.auth import get_user_model
+
+from recommend.models import Review, SearchLog, Favorite
+from recommend.serializers import ReviewSerializer, SearchLogSerializer, FavoriteSerializer
+
 User = get_user_model()
 
 
@@ -29,7 +33,6 @@ class LoginView(ObtainJSONWebToken):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@authentication_classes([JSONWebTokenAuthentication])
 def get_profile_detail(request):
     user = User.objects.get(id=request.user.id)
     user_serializer = UserSerializer(user)
@@ -39,4 +42,43 @@ def get_profile_detail(request):
         "data": {
             "profile": user_serializer.data,
         }
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_search_log_list(request):
+    user = User.objects.get(id=request.user.id)
+    queryset = SearchLog.objects.filter(user=user)
+    search_log_serializer = SearchLogSerializer(queryset, many=True)
+    return Response({
+        "status": "success",
+        "message": "내가 본 제품 목록 조회 성공",
+        "data": search_log_serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_favorite_list(request):
+    user = User.objects.get(id=request.user.id)
+    queryset = Favorite.objects.filter(fav_user=user)
+    favorite_serializer = FavoriteSerializer(queryset, many=True)
+    return Response({
+        "status": "success",
+        "message": "내가 찜 제품 목록 조회 성공",
+        "data": favorite_serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_review_list(request):
+    user = User.objects.get(id=request.user.id)
+    queryset = Review.objects.filter(user_no=user)
+    review_serializer = ReviewSerializer(queryset, many=True)
+    return Response({
+        "status": "success",
+        "message": "나의 리뷰 목록 조회 성공",
+        "data": review_serializer.data
     }, status=status.HTTP_200_OK)
