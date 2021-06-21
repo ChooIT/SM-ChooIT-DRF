@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_celery_beat",
     "corsheaders",
+    'storages',
     "django_extensions",
     "accounts",
     "recommend",

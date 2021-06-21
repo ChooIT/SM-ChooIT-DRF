@@ -2,6 +2,9 @@ from django.db import models
 
 from accounts.models import Tag
 from django.contrib.auth import get_user_model
+
+from recommend import utils
+
 User = get_user_model()
 
 
@@ -21,7 +24,7 @@ class Category(models.Model):
 
 class Image(models.Model):
     img_no = models.AutoField(primary_key=True)
-    img_path = models.CharField(max_length=200, null=False, default="")
+    img_path = models.ImageField(upload_to=utils.user_directory_path)
     user_no = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default="유저 정보 없음")
 
 
