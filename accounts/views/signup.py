@@ -74,10 +74,10 @@ def create_new_favorite_tag(request):
         ...
     ]
     """
-    serializer = CreateUserTagSerializer(data=request.data, many=True)
+    serializer = CreateUserTagSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        upgrade_active_level(user_email=request.data[0].get("user"))
+        upgrade_active_level(user_email=request.data.get("user"))
         return Response({
             "status": "success",
             "message": "성공적으로 선호 태그를 등록했습니다."
@@ -85,5 +85,22 @@ def create_new_favorite_tag(request):
 
     return Response({
         "status": "fail",
-        "message": "태그 등록에 실패했습니다."
+        "message": "태그 등록에 실패했습니다.",
+        "data": serializer.errors
     }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_using_prod_history(request):
+    # 사용해본 제품 추가하면 회원가입 완료 로직
+    level, is_user = upgrade_active_level(request.data.get('email'))
+    if is_user:
+        return Response({
+            "status": "success",
+            "message": "회원가입 완료"
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            "status": "fail",
+            "message": "제품 등록 실패"
+        }, status=status.HTTP_400_BAD_REQUEST)
