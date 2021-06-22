@@ -24,6 +24,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['email', 'password', 'gender', 'nickname', 'emoji', 'type', 'tags']
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('__all__')
+
+
 class CreateUserTagSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email')
     tag = serializers.ListField()

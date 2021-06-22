@@ -45,6 +45,10 @@ def create_user(request):
                 "emoji": data['emoji']
             }
         }, status=status.HTTP_201_CREATED)
+    return Response({
+        "status": "fail",
+        "message": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 
 def upgrade_active_level(user_email):
