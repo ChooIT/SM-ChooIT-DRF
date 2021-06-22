@@ -41,7 +41,7 @@ def tag_filtering_product_list(request):
         "status": "success",
         "message": "태그 기반 필터링 제품 목록 조회 성공",
         "data": {
-            "tag": filter_tag.tag.tag_text,
+            "tag": filter_tag.tag_text,
             "product": serializer.data
         }
     }, status=status.HTTP_200_OK)
