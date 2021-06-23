@@ -26,19 +26,19 @@ class ProductTagSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    img_path = serializers.SlugRelatedField(queryset=Image.objects.all(), slug_field='img_path')
+    prod_img_no = ImageSerializer()
 
     class Meta:
         model = ProductImage
         fields = [
-            "prod_img_no",
-            "img_path",
+            'prod_img_no'
         ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
     prod_tags = serializers.StringRelatedField(many=True, read_only=True)
     prod_category = serializers.StringRelatedField()
+    prod_images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
