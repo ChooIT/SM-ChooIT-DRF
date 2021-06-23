@@ -5,7 +5,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from recommend.models import Review, ReviewImage
+from recommend.models import Review, ReviewImage, ReviewTag
 from recommend.serializers import ImageSerializer, ReviewSerializer, ReviewImageSerializer
 from recommend.utils import get_first_p_tag_value
 from django.contrib.auth import get_user_model
@@ -58,7 +58,20 @@ def review_retrieve(request, pk=None):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+def create_review_tags(review_no: int, tag_no_list: list) -> None:
+    if len(tag_no_list) == 0:
+        return
+    for tag_no in tag_no_list:
+        ReviewTag.objects.create(
+            review_no_id=review_no,
+            tag_id=tag_no
+        )
+    return
+
+
 def create_review_image(review_no, review_img_no_list, thumbnail_no):
+    if len(review_img_no_list) == 0:
+        return
     for no in review_img_no_list:
         image = ReviewImage.objects.create(
             review_no_id=review_no,
@@ -75,6 +88,7 @@ def create_review_image(review_no, review_img_no_list, thumbnail_no):
 def post_new_review(request):
     request.data['user_no'] = request.user.id
     images = request.data.pop('images')
+    tags = request.data.pop('review_tags')
 
     serializer = ReviewSerializer(data=request.data)
     if serializer.is_valid():
@@ -87,6 +101,7 @@ def post_new_review(request):
             "data": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    create_review_tags(review_no, tags)
     create_review_image(review_no, images.get('review_img_no'), images.get('thumbnail'))
     return Response({
             "status": "success",
