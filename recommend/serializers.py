@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recommend.models import Product, Favorite, Review, ReviewImage, Image, SearchLog, ProductTag, Category
+from recommend.models import Product, Favorite, Review, ReviewImage, Image, SearchLog, ProductTag, Category, ProductImage
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -25,6 +25,17 @@ class ProductTagSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    img_path = serializers.SlugRelatedField(queryset=Image.objects.all(), slug_field='img_path')
+
+    class Meta:
+        model = ProductImage
+        fields = [
+            "prod_img_no",
+            "img_path",
+        ]
+
+
 class ProductSerializer(serializers.ModelSerializer):
     prod_tags = serializers.StringRelatedField(many=True, read_only=True)
     prod_category = serializers.StringRelatedField()
@@ -37,6 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'prod_manufacturer',
             'prod_category',
             'prod_price',
+            'prod_images',
             'created_at',
             'updated_at',
             'prod_tags'
