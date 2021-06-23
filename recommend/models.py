@@ -120,9 +120,12 @@ class ReviewImage(models.Model):
 
 
 class ReviewTag(models.Model):
-    review_no = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review_no = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='review_tags')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.tag.tag_text
 
     class Meta:
         ordering = ['-created_at']

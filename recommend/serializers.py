@@ -75,6 +75,7 @@ class ReviewImageSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     review_images = ReviewImageSerializer(many=True, read_only=True)
+    review_tags = serializers.StringRelatedField(read_only=True, many=True)
 
     def create(self, validated_data):
         return Review.objects.create(**validated_data)
@@ -91,6 +92,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'func2_rate',
             'func3_rate',
             'review_images',
+            'review_tags',
             'created_at',
             'updated_at'
         ]
