@@ -17,9 +17,9 @@ def get_user_tags(user_id: int):
     try:
         user = User.objects.get(id=user_id)
         tags = list(UserTag.objects.filter(user=user))
-        return tags
+        return tags, True
     except User.DoesNotExist:
-        return list(Tag.objects.all())
+        return list(Tag.objects.all()), False
 
 
 def create_search_log(user_id: int, prod: Product):
@@ -33,15 +33,16 @@ def create_search_log(user_id: int, prod: Product):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def tag_filtering_product_list(request):
-    tags_of_user = get_user_tags(request.user.id)
+    tags_of_user, is_auth_user = get_user_tags(request.user.id)
     filter_tag = choice(tags_of_user)
+    tag_text = (filter_tag.tag.tag_text if is_auth_user else filter_tag.tag_text)
     queryset = Product.objects.filter(prod_tags__tag__tag_text=filter_tag)
     serializer = ProductSerializer(queryset, many=True)
     return Response({
         "status": "success",
         "message": "태그 기반 필터링 제품 목록 조회 성공",
         "data": {
-            "tag": filter_tag.tag.tag_text,
+            "tag": tag_text,
             "product": serializer.data
         }
     }, status=status.HTTP_200_OK)
