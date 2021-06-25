@@ -1,19 +1,7 @@
 from rest_framework import serializers
-from recommend.models import Product, Favorite, Review, ReviewImage, Image, SearchLog, ProductTag, Category, ProductImage
+from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    img_path = serializers.ImageField(use_url=True)
-
-    class Meta:
-        model = Image
-        fields = [
-            'img_no',
-            'img_path',
-            'user_no'
-        ]
 
 
 class ProductTagSerializer(serializers.ModelSerializer):
@@ -26,12 +14,12 @@ class ProductTagSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    prod_img_no = ImageSerializer()
-
     class Meta:
         model = ProductImage
         fields = [
-            'prod_img_no'
+            'img_no',
+            'prod_img_path',
+            'prod_is_thumbnail'
         ]
 
 
@@ -68,13 +56,14 @@ class ReviewImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewImage
         fields = [
-            "review_img_no",
-            "review_is_thumbnail",
+            'img_no',
+            'img_path',
         ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    review_images = ReviewImageSerializer(many=True, read_only=True)
+    review_img_thumbnail = serializers.PrimaryKeyRelatedField(queryset=ReviewImage.objects.all(), write_only=True)
+    thumbnail_detail = ReviewImageSerializer(source='review_img_thumbnail', read_only=True)
     review_tags = serializers.StringRelatedField(read_only=True, many=True)
 
     def create(self, validated_data):
@@ -91,7 +80,8 @@ class ReviewSerializer(serializers.ModelSerializer):
             'func1_rate',
             'func2_rate',
             'func3_rate',
-            'review_images',
+            'review_img_thumbnail',
+            'thumbnail_detail',
             'review_tags',
             'created_at',
             'updated_at'
