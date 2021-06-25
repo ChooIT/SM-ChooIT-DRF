@@ -62,6 +62,7 @@ class ProductTag(models.Model):
 
 
 class ReviewImage(models.Model):
+    img_no = models.AutoField(primary_key=True)
     img_path = models.ImageField(upload_to=utils.user_directory_path)
     review_user_no = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

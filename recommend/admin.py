@@ -62,6 +62,7 @@ class ReviewAdmin(admin.ModelAdmin):
 @admin.register(ReviewImage)
 class ReviewImageAdmin(admin.ModelAdmin):
     list_display = (
+        'img_no',
         'img_path',
         'review_user_no',
         'created_at'

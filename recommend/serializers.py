@@ -52,6 +52,7 @@ class ReviewImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewImage
         fields = [
+            'img_no',
             'img_path',
             'review_user_no'
         ]
