@@ -16,7 +16,11 @@ class ProductTagSerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ('__all__')
+        fields = [
+            'img_no',
+            'prod_img_path',
+            'prod_is_thumbnail'
+        ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
