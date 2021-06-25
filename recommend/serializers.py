@@ -1,19 +1,7 @@
 from rest_framework import serializers
-from recommend.models import Product, Favorite, Review, ReviewImage, Image, SearchLog, ProductTag, Category, ProductImage
+from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    img_path = serializers.ImageField(use_url=True)
-
-    class Meta:
-        model = Image
-        fields = [
-            'img_no',
-            'img_path',
-            'user_no'
-        ]
 
 
 class ProductTagSerializer(serializers.ModelSerializer):
@@ -26,13 +14,9 @@ class ProductTagSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    prod_img_no = ImageSerializer()
-
     class Meta:
         model = ProductImage
-        fields = [
-            'prod_img_no'
-        ]
+        fields = ('__all__')
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -68,13 +52,13 @@ class ReviewImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewImage
         fields = [
-            "review_img_no",
-            "review_is_thumbnail",
+            'img_path',
+            'review_user_no'
         ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    review_images = ReviewImageSerializer(many=True, read_only=True)
+    review_images = serializers.ListField()
     review_tags = serializers.StringRelatedField(read_only=True, many=True)
 
     def create(self, validated_data):
@@ -91,6 +75,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'func1_rate',
             'func2_rate',
             'func3_rate',
+            'review_img_thumbnail',
             'review_images',
             'review_tags',
             'created_at',
