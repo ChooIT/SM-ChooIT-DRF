@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from recommend.models import Review, ReviewImage, ReviewTag
-from recommend.serializers import ImageSerializer, ReviewSerializer, ReviewImageSerializer
+from recommend.serializers import ReviewSerializer, ReviewImageSerializer
 from recommend.utils import get_first_p_tag_value
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -16,8 +16,8 @@ User = get_user_model()
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def post_review_image(request):
-    request.data['user_no'] = request.user.id
-    serializer = ImageSerializer(data=request.data)
+    request.data['review_user_no'] = request.user.id
+    serializer = ReviewImageSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({
