@@ -39,10 +39,11 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
+    img_no = models.AutoField(primary_key=True)
     prod_no = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='prod_images')
     prod_img_path = models.ImageField(upload_to=utils.user_directory_path)
     prod_is_thumbnail = models.BooleanField(default=False)
-    upload_user_no = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
+    user_no = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
     created_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -64,11 +65,8 @@ class ProductTag(models.Model):
 class ReviewImage(models.Model):
     img_no = models.AutoField(primary_key=True)
     img_path = models.ImageField(upload_to=utils.user_directory_path)
-    review_user_no = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user_no = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.img_path
 
     class Meta:
         ordering = ['-created_at']

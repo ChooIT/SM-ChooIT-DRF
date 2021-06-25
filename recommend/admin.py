@@ -25,11 +25,11 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
+        'img_no',
         'prod_no',
         'prod_img_path',
         'prod_is_thumbnail',
-        'upload_user_no',
+        'user_no',
         'created_at'
     )
 
@@ -64,7 +64,7 @@ class ReviewImageAdmin(admin.ModelAdmin):
     list_display = (
         'img_no',
         'img_path',
-        'review_user_no',
+        'user_no',
         'created_at'
     )
 
