@@ -69,25 +69,10 @@ def create_review_tags(review_no: int, tag_no_list: list) -> None:
     return
 
 
-def create_review_image(review_no, review_img_no_list, thumbnail_no):
-    if len(review_img_no_list) == 0:
-        return
-    for no in review_img_no_list:
-        image = ReviewImage.objects.create(
-            review_no_id=review_no,
-            review_img_no_id=no
-        )
-        if no == thumbnail_no:
-            image.review_is_thumbnail = True
-            image.save()
-    return
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def post_new_review(request):
     request.data['user_no'] = request.user.id
-    images = request.data.pop('images')
     tags = request.data.pop('review_tags')
 
     serializer = ReviewSerializer(data=request.data)
@@ -102,8 +87,10 @@ def post_new_review(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     create_review_tags(review_no, tags)
-    create_review_image(review_no, images.get('review_img_no'), images.get('thumbnail'))
     return Response({
             "status": "success",
             "message": "리뷰 등록 성공",
+            "data": {
+                "review_no" : review_no
+            }
         }, status=status.HTTP_201_CREATED)

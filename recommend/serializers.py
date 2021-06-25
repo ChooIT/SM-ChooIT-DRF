@@ -54,12 +54,12 @@ class ReviewImageSerializer(serializers.ModelSerializer):
         fields = [
             'img_no',
             'img_path',
-            'review_user_no'
         ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    review_images = serializers.ListField()
+    review_img_thumbnail = serializers.PrimaryKeyRelatedField(queryset=ReviewImage.objects.all(), write_only=True)
+    thumbnail_detail = ReviewImageSerializer(source='review_img_thumbnail', read_only=True)
     review_tags = serializers.StringRelatedField(read_only=True, many=True)
 
     def create(self, validated_data):
@@ -77,7 +77,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'func2_rate',
             'func3_rate',
             'review_img_thumbnail',
-            'review_images',
+            'thumbnail_detail',
             'review_tags',
             'created_at',
             'updated_at'
