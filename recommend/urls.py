@@ -8,7 +8,7 @@ urlpatterns = [
     path('image/', review.post_review_image),
     path('review/', review.review_list),
     path('review/post/', review.post_new_review),
-    path('review/<int:pk>/', review.review_retrieve),
+    path('review/<int:pk>/', review.ReviewDetail.as_view()),
     path('category/', data.CategoryList.as_view()),
     path('tag/', data.TagList.as_view()),
 ]
