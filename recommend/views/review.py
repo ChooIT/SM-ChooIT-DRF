@@ -1,14 +1,18 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from config.permissions import ReadOnly, IsOwnerOrReadOnly
 from recommend.models import Review, ReviewImage, ReviewTag
 from recommend.serializers import ReviewSerializer, ReviewImageSerializer
 from recommend.utils import get_first_p_tag_value
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 
@@ -58,6 +62,40 @@ def review_retrieve(request, pk=None):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+#
+# @api_view(['DELETE'])
+# @permission_classes([IsAuthenticated, IsOwnedByProfile])
+# def delete_review(request, pk=None):
+#     try:
+#         review = Review.objects.get(pk=pk)
+#     except Review.DoesNotExist:
+#         raise Http404
+#     review.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ReviewDetail(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def get_object(self, pk):
+        try:
+            obj = Review.objects.get(pk=pk)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        except Review.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        review = self.get_object(pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk, format=None):
+        review = self.get_object(pk)
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 def create_review_tags(review_no: int, tag_no_list: list) -> None:
     if len(tag_no_list) == 0:
         return
@@ -88,9 +126,9 @@ def post_new_review(request):
 
     create_review_tags(review_no, tags)
     return Response({
-            "status": "success",
-            "message": "리뷰 등록 성공",
-            "data": {
-                "review_no" : review_no
-            }
-        }, status=status.HTTP_201_CREATED)
+        "status": "success",
+        "message": "리뷰 등록 성공",
+        "data": {
+            "review_no": review_no
+        }
+    }, status=status.HTTP_201_CREATED)

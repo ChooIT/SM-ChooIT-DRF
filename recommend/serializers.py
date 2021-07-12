@@ -61,10 +61,25 @@ class ReviewImageSerializer(serializers.ModelSerializer):
         ]
 
 
+class ReviewUserSerializer(serializers.ModelSerializer):
+    tags = serializers.StringRelatedField(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'nickname',
+            'emoji',
+            'tags'
+        ]
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     review_img_thumbnail = serializers.PrimaryKeyRelatedField(queryset=ReviewImage.objects.all(), write_only=True)
     thumbnail_detail = ReviewImageSerializer(source='review_img_thumbnail', read_only=True)
     review_tags = serializers.StringRelatedField(read_only=True, many=True)
+    user_no = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    user = ReviewUserSerializer(source='user_no', read_only=True)
 
     def create(self, validated_data):
         return Review.objects.create(**validated_data)
@@ -73,6 +88,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = [
             'review_no',
+            'user',
             'user_no',
             'prod_no',
             'review_title',
