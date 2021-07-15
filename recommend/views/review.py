@@ -93,7 +93,10 @@ class ReviewDetail(APIView):
     def delete(self, request, pk, format=None):
         review = self.get_object(pk)
         review.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({
+            "status": "success",
+            "message": "리뷰 삭제 성공"
+        }, status=status.HTTP_200_OK)
 
 
 def create_review_tags(review_no: int, tag_no_list: list) -> None:
