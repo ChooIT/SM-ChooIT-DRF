@@ -75,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     active_level = models.IntegerField(default=0)
+    birth = models.PositiveIntegerField(default=1980, null=False)
     gender = models.CharField(
         _("gender type"),
         max_length=1,
