@@ -41,6 +41,7 @@ def create_user(request):
             "status": "success",
             "message": "회원가입에 성공하였습니다.",
             "data": {
+                "email": data['email'],
                 "nickname": data['nickname'],
                 "emoji": data['emoji']
             }
