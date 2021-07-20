@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],
+            birth=validated_data['birth'],
             gender=validated_data['gender'],
             nickname=validated_data['nickname'],
             emoji=validated_data['emoji'],
@@ -21,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'gender', 'nickname', 'emoji', 'type', 'tags']
+        fields = ['email', 'password', 'birth', 'gender', 'nickname', 'emoji', 'type', 'tags']
 
 
 class TagSerializer(serializers.ModelSerializer):
