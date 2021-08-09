@@ -174,7 +174,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
 # django-cors-headers
-CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
+CORS_ORIGIN_WHITELIST = ("http://localhost:3000", os.environ.get("CORS_URL"),)
 CORS_ORIGIN_REGEX_WHITELIST = (r"^(https?://)?(\w+\.)?url\.com$",)
 CORS_ALLOW_CREDENTIALS = True
 
