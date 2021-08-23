@@ -5,6 +5,7 @@ urlpatterns = [
     # main
     path('', recommendation.tag_filtering_product_list),
     path('populariest/', recommendation.get_item_list_of_the_day),
+    path('search/', recommendation.get_item_list_filtered_by_category),
 
     # product
     path('<int:pk>/', product.get_product_detail),

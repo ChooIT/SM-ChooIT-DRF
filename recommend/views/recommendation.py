@@ -10,6 +10,7 @@ from accounts.models import UserTag, Tag
 from recommend.models import SearchLog, Product
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 
@@ -41,8 +42,8 @@ def get_tag_randomly(tag_memo, tag_list):
 @permission_classes([AllowAny])
 def get_item_list_of_the_day(request):
     most_searched_products = SearchLog.objects \
-        .annotate(prod_count=Count('prod'))\
-        .order_by('-prod_count')\
+        .annotate(prod_count=Count('prod')) \
+        .order_by('-prod_count') \
         .values_list('prod', flat=True)
     print(most_searched_products)
     products = Product.objects.all().filter(prod_no__in=most_searched_products)
@@ -77,3 +78,24 @@ def tag_filtering_product_list(request):
         "message": "태그 기반 필터링 제품 목록 조회 성공",
         "data": rec_based_on_tag_list
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_item_list_filtered_by_category(request):
+    '''
+    ?category=
+    ?case=
+    '''
+    filter_key_list = list(request.GET.keys())
+    filter_dict = {}
+    for filter_key in filter_key_list:
+        key = {"category": "prod_category__category_name", "case": "prod_tags__tag__tag_text"}.get(filter_key)
+        filter_dict[key] = request.GET.get(filter_key)
+    product = Product.objects.filter(**filter_dict)
+    serializer = ProductThumbnailSerializer(product, many=True)
+    return Response({
+        "status": "success",
+        "message": "카테고리 별 상품 리스트 출력 성공",
+        "data": serializer.data
+    })
