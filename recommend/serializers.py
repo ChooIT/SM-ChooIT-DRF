@@ -45,6 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductThumbnailSerializer(serializers.ModelSerializer):
     prod_thumbnail = serializers.SerializerMethodField()
+    prod_category = serializers.StringRelatedField()
     prod_tags = serializers.SerializerMethodField()
 
     class Meta:
