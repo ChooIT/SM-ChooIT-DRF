@@ -43,6 +43,26 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductThumbnailSerializer(serializers.ModelSerializer):
+    prod_thumbnail = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = [
+            'prod_no',
+            'prod_name',
+            'prod_category',
+            'prod_price',
+            'prod_thumbnail',
+        ]
+
+    def get_prod_thumbnail(self, obj):
+        try:
+            return ProductImage.objects.get(prod_no=obj.prod_no, prod_is_thumbnail=True).prod_img_path.url
+        except ProductImage.DoesNotExist:
+            return None
+
+
 class CreateFavoriteSerializer(serializers.ModelSerializer):
     fav_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     fav_prod = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())

@@ -1,14 +1,23 @@
 from django.urls import path
-from .views import product, review, data
+from .views import product, review, data, recommendation
 
 urlpatterns = [
-    path('', product.tag_filtering_product_list),
+    # main
+    path('', recommendation.tag_filtering_product_list),
+    path('populariest/', recommendation.get_item_list_of_the_day),
+
+    # product
     path('<int:pk>/', product.get_product_detail),
     path('favorite/', product.create_user_favorite_product),
+
+    # review
     path('image/', review.post_review_image),
     path('review/', review.review_list),
     path('review/post/', review.post_new_review),
     path('review/<int:pk>/', review.ReviewDetail.as_view()),
+
+    # category
     path('category/', data.CategoryList.as_view()),
+    # tag
     path('tag/', data.TagList.as_view()),
 ]

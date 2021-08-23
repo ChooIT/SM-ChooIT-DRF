@@ -1,5 +1,5 @@
 from django.contrib import admin
-from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag
+from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog
 
 
 @admin.register(Category)
@@ -29,7 +29,6 @@ class ProductImageAdmin(admin.ModelAdmin):
         'prod_no',
         'prod_img_path',
         'prod_is_thumbnail',
-        'user_no',
         'created_at'
     )
 
@@ -74,5 +73,13 @@ class ReviewTagAdmin(admin.ModelAdmin):
     list_display = [
         'review_no',
         'tag',
+        'created_at'
+    ]
+
+@admin.register(SearchLog)
+class ReviewTagAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'prod',
         'created_at'
     ]
