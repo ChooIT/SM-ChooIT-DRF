@@ -7,6 +7,11 @@ urlpatterns = [
     path('populariest/', recommendation.get_item_list_of_the_day),
     path('search/', recommendation.get_item_list_filtered_by_category),
 
+    # recommendation
+    path('alike/user/', recommendation.get_recommendation_list_based_on_alike_user),
+    path('alike/item/', recommendation.get_recommendation_list_based_on_alike_item),
+    path('alike/mix/', recommendation.get_recommendation_list_based_on_mix),
+
     # product
     path('<int:pk>/', product.get_product_detail),
     path('favorite/', product.create_user_favorite_product),

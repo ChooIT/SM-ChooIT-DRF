@@ -2,7 +2,7 @@ from random import choice
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from django.db.models import Count
@@ -98,4 +98,46 @@ def get_item_list_filtered_by_category(request):
         "status": "success",
         "message": "카테고리 별 상품 리스트 출력 성공",
         "data": serializer.data
-    })
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_recommendation_list_based_on_alike_user(request):
+    # TODO: 추천 로직
+    product = Product.objects.all()[:5]
+    serializer = ProductThumbnailSerializer(product, many=True)
+
+    return Response({
+        "status": "success",
+        "message": "나와 비슷한 유저가 좋아하는 제품 기반 추천 리스트 출력 성공",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_recommendation_list_based_on_alike_item(request):
+    # TODO: 추천 로직
+    product = Product.objects.all()[:5]
+    serializer = ProductThumbnailSerializer(product, many=True)
+
+    return Response({
+        "status": "success",
+        "message": "내가 좋아하는 제품과 유사한 추천 리스트 출력 성공",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_recommendation_list_based_on_mix(request):
+    #  TODO: 추천 로직
+    product = Product.objects.all()[:5]
+    serializer = ProductThumbnailSerializer(product, many=True)
+
+    return Response({
+        "status": "success",
+        "message": "종합적 추천 성공",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
