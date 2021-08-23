@@ -17,6 +17,7 @@ class ProductAdmin(admin.ModelAdmin):
         'prod_name',
         'prod_manufacturer',
         'prod_price',
+        'prod_preference',
         'created_at',
         'updated_at'
     )

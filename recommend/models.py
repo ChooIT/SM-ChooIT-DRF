@@ -2,6 +2,7 @@ from django.db import models
 
 from accounts.models import Tag
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from recommend import utils
 
@@ -28,6 +29,20 @@ class Product(models.Model):
     prod_name = models.CharField(max_length=100, null=False)
     prod_manufacturer = models.CharField(max_length=30)
     prod_price = models.CharField(max_length=10, null=False)
+    prod_preference = models.IntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
+        default=50
+    )
+    review_preference = models.IntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
+        default=50
+    )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

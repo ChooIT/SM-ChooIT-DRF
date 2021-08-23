@@ -36,6 +36,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'prod_manufacturer',
             'prod_category',
             'prod_price',
+            'prod_preference',
+            'review_preference',
             'prod_images',
             'created_at',
             'updated_at',
