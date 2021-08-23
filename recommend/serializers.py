@@ -45,6 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductThumbnailSerializer(serializers.ModelSerializer):
     prod_thumbnail = serializers.SerializerMethodField()
+    prod_tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -54,7 +55,11 @@ class ProductThumbnailSerializer(serializers.ModelSerializer):
             'prod_category',
             'prod_price',
             'prod_thumbnail',
+            'prod_tags'
         ]
+
+    def get_prod_tags(self, obj):
+        return ProductTag.objects.filter(prod__prod_no=obj.prod_no).values_list('tag__tag_text', flat=True)[:3]
 
     def get_prod_thumbnail(self, obj):
         try:
