@@ -36,13 +36,6 @@ class Product(models.Model):
         ],
         default=50
     )
-    review_preference = models.IntegerField(
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(100)
-        ],
-        default=50
-    )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
