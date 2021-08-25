@@ -1,5 +1,6 @@
 from django.contrib import admin
-from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog
+from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog, \
+    Estimate
 
 
 @admin.register(Category)
@@ -83,4 +84,13 @@ class ReviewTagAdmin(admin.ModelAdmin):
         'user',
         'prod',
         'created_at'
+    ]
+
+
+@admin.register(Estimate)
+class EstimateAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'prod',
+        'estimate_rate'
     ]

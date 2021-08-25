@@ -152,3 +152,18 @@ class Favorite(models.Model):
 
     class Meta:
         ordering = ['-fav_created_at']
+
+
+class Estimate(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prod = models.ForeignKey(Product, on_delete=models.CASCADE)
+    estimate_rate = models.IntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(5)
+        ],
+        default=3
+    )
+
+    class Meta:
+        unique_together = ['user', 'prod']

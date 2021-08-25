@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage
+from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage, \
+    Estimate
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -152,6 +153,16 @@ class FavoriteSerializer(serializers.ModelSerializer):
             'user',
             'prod',
             'created_at'
+        ]
+
+
+class EstimateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Estimate
+        fields = [
+            'user',
+            'prod',
+            'estimate_rate'
         ]
 
 
