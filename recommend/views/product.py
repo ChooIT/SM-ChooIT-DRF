@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
+from config.permissions import MethodDependPermission
 from recommend.models import Product, SearchLog
 from recommend.serializers import ProductSerializer, CreateFavoriteSerializer, EstimateSerializer
 from django.contrib.auth import get_user_model
@@ -20,7 +21,7 @@ def create_search_log(user_id: int, prod: Product):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@permission_classes([MethodDependPermission])
 def get_product_detail(request, pk=None):
     if request.method == 'GET':
         queryset = Product.objects.all()
