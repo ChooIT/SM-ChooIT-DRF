@@ -22,3 +22,13 @@ class IsOwnerOrReadOnly(BasePermission):
             return str(obj.user_no) == str(request.user.email)
         else:
             return False
+
+
+class MethodDependPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'GET':
+            return True
+        elif request.method == 'POST':
+            if request.user.is_authenticated:
+                return True
+            return False
