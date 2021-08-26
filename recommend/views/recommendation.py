@@ -62,13 +62,13 @@ def tag_filtering_product_list(request):
 
     rec_based_on_tag_list = []
     tag_memo = []
-    for number in range(0, 3):
+    for number in range(0, 2):
         rec_dict = {}
         filter_tag = get_tag_randomly(tag_memo, tags_of_user)
         tag_text = (filter_tag.tag.tag_text if is_auth_user else filter_tag.tag_text)
         rec_dict['tag'] = tag_text
 
-        queryset = Product.objects.filter(prod_tags__tag__tag_text=filter_tag)[:3]
+        queryset = Product.objects.filter(prod_tags__tag__tag_text=filter_tag)[:6]
         serializer = ProductThumbnailSerializer(queryset, many=True)
         rec_dict['product'] = serializer.data
         rec_based_on_tag_list.append(rec_dict)
