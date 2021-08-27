@@ -152,6 +152,7 @@ class Favorite(models.Model):
 
     class Meta:
         ordering = ['-fav_created_at']
+        unique_together = ['fav_user', 'fav_prod']
 
 
 class Estimate(models.Model):
