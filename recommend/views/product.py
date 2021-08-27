@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from config.permissions import MethodDependPermission
-from recommend.models import Product, SearchLog
+from recommend.models import Product, SearchLog, Favorite
 from recommend.serializers import ProductSerializer, CreateFavoriteSerializer, EstimateSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -46,14 +46,28 @@ def get_product_detail(request, pk=None):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def create_user_favorite_product(request):
-    request.data['fav_user'] = request.user.id
-    serializer = CreateFavoriteSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({
-            "status": "success",
-            "message": "나의 찜에 성공적으로 저장했습니다."
-        }, status=status.HTTP_201_CREATED)
+def user_favorite_product(request):
+    if request.method == 'POST':
+        request.data['fav_user'] = request.user.id
+        serializer = CreateFavoriteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "status": "success",
+                "message": "나의 찜에 성공적으로 저장했습니다."
+            }, status=status.HTTP_201_CREATED)
+    if request.method == 'DELETE':
+        try:
+            favorite = Favorite.objects.get(fav_user=request.user, fav_prod_id=request.data.get('fav_prod'))
+            favorite.delete()
+            return Response({
+                "status": "success",
+                "message": "성공적으로 찜에서 삭제했습니다."
+            }, status=status.HTTP_204_NO_CONTENT)
+        except Favorite.DoesNotExist:
+            return Response({
+                "status": "fail",
+                "message": "해당 제품이 찜에 존재하지 않습니다."
+            }, status=status.HTTP_204_NO_CONTENT)

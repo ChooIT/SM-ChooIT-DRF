@@ -14,7 +14,7 @@ urlpatterns = [
 
     # product
     path('<int:pk>/', product.get_product_detail),
-    path('favorite/', product.create_user_favorite_product),
+    path('favorite/', product.user_favorite_product),
 
     # review
     path('image/', review.post_review_image),

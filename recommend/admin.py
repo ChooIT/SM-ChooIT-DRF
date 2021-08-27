@@ -1,6 +1,6 @@
 from django.contrib import admin
 from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog, \
-    Estimate
+    Estimate, Favorite
 
 
 @admin.register(Category)
@@ -93,4 +93,13 @@ class EstimateAdmin(admin.ModelAdmin):
         'user',
         'prod',
         'estimate_rate'
+    ]
+
+
+@admin.register(Favorite)
+class EstimateAdmin(admin.ModelAdmin):
+    list_display = [
+        'fav_user',
+        'fav_prod',
+        'fav_created_at'
     ]
