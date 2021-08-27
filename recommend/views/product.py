@@ -20,6 +20,16 @@ def create_search_log(user_id: int, prod: Product):
         pass
 
 
+def is_already_favorite_product_of_user(user_id, prod_id):
+    try:
+        if Favorite.objects.get(fav_user_id=user_id, fav_prod_id=prod_id):
+            return True
+        else:
+            return False
+    except Favorite.DoesNotExist:
+        return False
+
+
 @api_view(['GET', 'POST'])
 @permission_classes([MethodDependPermission])
 def get_product_detail(request, pk=None):
@@ -29,13 +39,7 @@ def get_product_detail(request, pk=None):
         product = get_object_or_404(queryset, pk=pk)
         data = ProductSerializer(product).data
         create_search_log(user_id=user_id, prod=product)
-        try:
-            if Favorite.objects.get(fav_user_id=user_id, fav_prod_id=pk):
-                data['is_favorite_prod'] = True
-            else:
-                data['is_favorite_prod'] = False
-        except Favorite.DoesNotExist:
-            data['is_favorite_prod'] = False
+        data['is_favorite_prod'] = is_already_favorite_product_of_user(user_id=user_id, prod_id=pk)
         return Response(data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         request.data['user'] = request.user.id
