@@ -24,11 +24,19 @@ def create_search_log(user_id: int, prod: Product):
 @permission_classes([MethodDependPermission])
 def get_product_detail(request, pk=None):
     if request.method == 'GET':
+        user_id = request.user.id
         queryset = Product.objects.all()
         product = get_object_or_404(queryset, pk=pk)
-        serializer = ProductSerializer(product)
-        create_search_log(user_id=request.user.id, prod=product)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = ProductSerializer(product).data
+        create_search_log(user_id=user_id, prod=product)
+        try:
+            if Favorite.objects.get(fav_user_id=user_id, fav_prod_id=pk):
+                data['is_favorite_prod'] = True
+            else:
+                data['is_favorite_prod'] = False
+        except Favorite.DoesNotExist:
+            data['is_favorite_prod'] = False
+        return Response(data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         request.data['user'] = request.user.id
         request.data['prod'] = pk
@@ -58,6 +66,10 @@ def user_favorite_product(request):
                 "status": "success",
                 "message": "나의 찜에 성공적으로 저장했습니다."
             }, status=status.HTTP_201_CREATED)
+        return Response({
+            "status": "fail",
+            "message": serializer.errors,
+        }, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'DELETE':
         try:
             favorite = Favorite.objects.get(fav_user=request.user, fav_prod_id=request.data.get('fav_prod'))
