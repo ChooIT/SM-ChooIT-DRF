@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage, \
-    Estimate
+    Estimate, Option
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -170,3 +170,21 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('__all__')
+
+
+class OptionSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(write_only=True)
+    tag = serializers.SerializerMethodField()
+
+    def get_tag(self, obj):
+        tag_list = []
+        for option in obj:
+            tag_list.append(option.tag.tag_text)
+        return tag_list
+
+    class Meta:
+        model = Option
+        fields = [
+            'title',
+            'tag'
+        ]

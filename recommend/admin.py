@@ -1,6 +1,6 @@
 from django.contrib import admin
 from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog, \
-    Estimate, Favorite
+    Estimate, Favorite, Option
 
 
 @admin.register(Category)
@@ -9,6 +9,16 @@ class CategoryAdmin(admin.ModelAdmin):
         'category_name',
         'created_at'
     )
+
+
+@admin.register(Option)
+class OptionAdmin(admin.ModelAdmin):
+    list_display = [
+        'option_id',
+        'title',
+        'tag',
+        'created_at'
+    ]
 
 
 @admin.register(Product)

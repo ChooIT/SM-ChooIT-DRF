@@ -26,4 +26,6 @@ urlpatterns = [
     path('category/', data.CategoryList.as_view()),
     # tag
     path('tag/', data.TagList.as_view()),
+    # option
+    path('option/', data.OptionList.as_view()),
 ]
