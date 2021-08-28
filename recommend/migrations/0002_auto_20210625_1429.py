@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
                 INSERT INTO recommend_category
                 (category_name, created_at, function1, function2, function3) VALUES
                 ('분류 없음', CURRENT_TIMESTAMP, null, null, null),
-                ('노트북', CURRENT_TIMESTAMP, '성능', '무게', '발열'),
-                ('태블릿', CURRENT_TIMESTAMP, '성능', '액정', '가격'),
-                ('키보드/마우스', CURRENT_TIMESTAMP, '디자인', '가성비', '사용감')
+                ('노트북', CURRENT_TIMESTAMP, '성능', '발열', '무게'),
+                ('키보드', CURRENT_TIMESTAMP, '키감', '소음', '가격대비'),
+                ('마우스', CURRENT_TIMESTAMP, '사용감', '소음', '가격대비')
             """
         )
     ]
