@@ -56,7 +56,7 @@ class ProductImage(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['prod_no', '-prod_is_thumbnail']
+        ordering = ['prod_no', '-prod_is_thumbnail', 'img_no']
 
 
 class ProductTag(models.Model):
