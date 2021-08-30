@@ -174,17 +174,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class OptionSerializer(serializers.ModelSerializer):
     title = serializers.CharField(write_only=True)
-    tag = serializers.SerializerMethodField()
-
-    def get_tag(self, obj):
-        tag_list = []
-        for option in obj:
-            tag_list.append(option.tag.tag_text)
-        return tag_list
+    tag = serializers.StringRelatedField()
+    flag = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Option
         fields = [
             'title',
-            'tag'
+            'tag',
+            'flag'
         ]

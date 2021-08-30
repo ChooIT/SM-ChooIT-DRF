@@ -17,16 +17,5 @@ class Migration(migrations.Migration):
                 ('노트북', CURRENT_TIMESTAMP, '성능', '발열', '무게'),
                 ('키보드', CURRENT_TIMESTAMP, '키감', '소음', '가격대비'),
                 ('마우스', CURRENT_TIMESTAMP, '사용감', '소음', '가격대비');
-            """,
-            """
-            INSERT INTO recommend_option
-                (title, category, tag_id, created_at) VALUES
-                ('문서작업/코딩', '키보드', 13, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 14, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 15, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 17, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 21, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 25, CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', 26, CURRENT_TIMESTAMP);
             """
         ])]

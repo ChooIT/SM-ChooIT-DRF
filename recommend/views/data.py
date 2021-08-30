@@ -37,5 +37,5 @@ class OptionList(APIView):
     def get(self, request):
         title = request.GET.get('purpose')
         queryset = Option.objects.filter(title=title)
-        serializer = OptionSerializer(queryset)
+        serializer = OptionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
