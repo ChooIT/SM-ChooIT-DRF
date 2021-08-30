@@ -44,7 +44,7 @@ class Product(models.Model):
         return "%d. [%s]%s" % (self.prod_no, self.prod_manufacturer, self.prod_name)
 
     class Meta:
-        ordering = ['id']
+        ordering = ['prod_no']
 
 
 class ProductImage(models.Model):
