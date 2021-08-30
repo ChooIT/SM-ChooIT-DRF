@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['tag_code', 'tag_text']
+    list_display = ['id', 'tag_text']
 
 
 @admin.register(UserTag)
