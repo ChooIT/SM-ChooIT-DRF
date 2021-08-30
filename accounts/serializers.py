@@ -26,6 +26,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        tag_code = Tag.objects.all().count() + 1
+        tag_text = validated_data['tag_text']
+        return Tag.objects.create(tag_code=tag_code, tag_text=tag_text)
+
     class Meta:
         model = Tag
         fields = ('__all__')
