@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=10)
+    category_name = models.CharField(max_length=10, primary_key=True)
     function1 = models.CharField(max_length=10, null=True)
     function2 = models.CharField(max_length=10, null=True)
     function3 = models.CharField(max_length=10, null=True)
@@ -173,6 +173,7 @@ class Estimate(models.Model):
 class Option(models.Model):
     option_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=10, null=True)
+    category = models.CharField(max_length=10, null=True)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
 
