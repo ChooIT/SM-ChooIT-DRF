@@ -143,14 +143,14 @@ class NicknameArchive(models.Model):
 
 
 class Tag(models.Model):
-    tag_text = models.CharField(max_length=10, null=False)
-    tag_code = models.AutoField(primary_key=True)
+    id = models.IntegerField(unique=True)
+    tag_text = models.CharField(primary_key=True, max_length=15, null=False)
 
     def __str__(self):
         return self.tag_text
 
     class Meta:
-        ordering = ['tag_code']
+        ordering = ['id']
 
 
 class UserTag(models.Model):
@@ -162,4 +162,4 @@ class UserTag(models.Model):
         return self.tag.tag_text
 
     class Meta:
-        ordering = ['tag__tag_code']
+        ordering = ['tag__id']
