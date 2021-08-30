@@ -21,12 +21,12 @@ class Migration(migrations.Migration):
             """
             INSERT INTO recommend_option
                 (title, category, tag_id, created_at) VALUES
-                ('문서작업/코딩', '키보드', '멤브레인', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '펜타그래프', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '기계식 적축', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '기계식 갈축', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '텐키', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '키압 낮음', CURRENT_TIMESTAMP),
-                ('문서작업/코딩', '키보드', '키압 중간', CURRENT_TIMESTAMP);
+                ('문서작업/코딩', '키보드', 13, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 14, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 15, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 17, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 21, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 25, CURRENT_TIMESTAMP),
+                ('문서작업/코딩', '키보드', 26, CURRENT_TIMESTAMP);
             """
         ])]

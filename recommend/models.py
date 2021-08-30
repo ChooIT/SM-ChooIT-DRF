@@ -10,7 +10,8 @@ User = get_user_model()
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=10, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=10, unique=True)
     function1 = models.CharField(max_length=10, null=True)
     function2 = models.CharField(max_length=10, null=True)
     function3 = models.CharField(max_length=10, null=True)

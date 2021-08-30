@@ -133,7 +133,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class SearchLogSerializer(serializers.ModelSerializer):
-    prod = ProductSerializer(read_only=True)
+    prod = ProductThumbnailSerializer(read_only=True)
 
     class Meta:
         model = SearchLog
@@ -145,7 +145,7 @@ class SearchLogSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    prod = ProductSerializer(read_only=True)
+    prod = ProductThumbnailSerializer(read_only=True)
 
     class Meta:
         model = SearchLog

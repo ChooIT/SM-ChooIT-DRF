@@ -67,8 +67,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.IntegerField(unique=True)),
-                ('tag_text', models.CharField(max_length=15, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True)),
+                ('tag_text', models.CharField(max_length=15, unique=True, serialize=False)),
             ],
             options={
                 'ordering': ['id'],
