@@ -20,7 +20,7 @@ def get_user_tags(user_id: int):
         tags = list(UserTag.objects.filter(user=user))
         return tags, True
     except User.DoesNotExist:
-        return list(Tag.objects.all()), False
+        return list(Tag.objects.all().filter(id__lt=13)), False
 
 
 def is_already_used(memo, tag):

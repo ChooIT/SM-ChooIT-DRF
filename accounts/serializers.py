@@ -26,11 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        tag_id = Tag.objects.all().count() + 1
-        tag_text = validated_data['tag_text']
-        return Tag.objects.create(id=tag_id, tag_text=tag_text)
-
     class Meta:
         model = Tag
         fields = ('__all__')
@@ -42,10 +37,9 @@ class CreateUserTagSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.get(email=validated_data['user'])
-        tags = [Tag(id=code) for code in validated_data['tag']]
         user_tags = []
-        for tag in tags:
-            user_tags.append(UserTag(user=user, tag=tag))
+        for tag_id in validated_data['tag']:
+            user_tags.append(UserTag(user=user, tag_id=tag_id))
         return UserTag.objects.bulk_create(user_tags)
 
     class Meta:
