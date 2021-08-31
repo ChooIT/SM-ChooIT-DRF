@@ -1,6 +1,7 @@
 from accounts.utils import get_nickname
 
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -10,6 +11,7 @@ User = get_user_model()
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def is_registered_email(request):
     email = request.GET.get('email')
     try:
@@ -23,6 +25,7 @@ def is_registered_email(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_user(request):
     """
     {
@@ -65,6 +68,7 @@ def upgrade_active_level(user_email):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_new_favorite_tag(request):
     """
     [
@@ -96,6 +100,7 @@ def create_new_favorite_tag(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_using_prod_history(request):
     # 사용해본 제품 추가하면 회원가입 완료 로직
     level, is_user = upgrade_active_level(request.data.get('email'))
