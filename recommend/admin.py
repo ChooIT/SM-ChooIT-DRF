@@ -26,6 +26,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'prod_no',
         'prod_name',
+        'prod_category',
         'prod_manufacturer',
         'prod_price',
         'prod_preference',
