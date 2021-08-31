@@ -7,9 +7,11 @@ from rest_framework.response import Response
 
 from django.db.models import Count
 from accounts.models import UserTag, Tag
-from recommend.models import SearchLog, Product
+from recommend.models import SearchLog, Product, Estimate
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
+
+from recommend.views.recommend.recommend_based_on_user import get_recommendation_list_based_on_user
 
 User = get_user_model()
 
@@ -101,11 +103,24 @@ def get_item_list_filtered_by_category(request):
     }, status=status.HTTP_200_OK)
 
 
+def make_user_preference(user):
+    number_of_products = Product.objects.all().count() + 1
+    keys = [str(index) for index in range(1, number_of_products)]
+    values = ['' for number in range(1, number_of_products)]
+    user_preference_dict = dict(zip(keys, values))
+
+    for estimate in Estimate.objects.all().filter(user=user):
+        user_preference_dict[str(estimate.prod_id)] = estimate.estimate_rate
+    return user_preference_dict
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_user(request):
     # TODO: 추천 로직
-    product = Product.objects.all()[:5]
+    user_preference = make_user_preference(request.user)
+    recommendation_list = get_recommendation_list_based_on_user(user_preference)
+    product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
     serializer = ProductThumbnailSerializer(product, many=True)
 
     return Response({
