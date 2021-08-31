@@ -22,7 +22,7 @@ class CategoryList(APIView):
 
 class TagList(APIView):
     def get(self, request):
-        queryset = Tag.objects.all()
+        queryset = Tag.objects.all()[1:12]
         serializer = TagSerializer(queryset, many=True)
         return Response({
             "status": "success",
