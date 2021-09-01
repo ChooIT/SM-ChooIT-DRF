@@ -109,6 +109,9 @@ def make_user_preference(user):
     values = ['' for number in range(1, number_of_products)]
     user_preference_dict = dict(zip(keys, values))
 
+    if Estimate.objects.all().filter(user=user).count() == 0:
+        return None
+
     for estimate in Estimate.objects.all().filter(user=user):
         user_preference_dict[str(estimate.prod_id)] = estimate.estimate_rate
     return user_preference_dict
@@ -117,10 +120,12 @@ def make_user_preference(user):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_user(request):
-    # TODO: 추천 로직
     user_preference = make_user_preference(request.user)
-    recommendation_list = get_recommendation_list_based_on_user(user_preference)
-    product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
+    if user_preference is None:
+        product = Product.objects.all()[:5]
+    else:
+        recommendation_list = get_recommendation_list_based_on_user(user_preference)
+        product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
     serializer = ProductThumbnailSerializer(product, many=True)
 
     return Response({
