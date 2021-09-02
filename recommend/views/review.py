@@ -126,8 +126,8 @@ def post_new_review(request):
             "message": "리뷰 등록 실패",
             "data": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-
-    create_review_tags(review_no, tags)
+    if tags:
+        create_review_tags(review_no, tags)
     return Response({
         "status": "success",
         "message": "리뷰 등록 성공",
