@@ -145,14 +145,14 @@ class SearchLogSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    prod = ProductThumbnailSerializer(read_only=True)
+    fav_prod = ProductThumbnailSerializer(read_only=True)
 
     class Meta:
-        model = SearchLog
+        model = Favorite
         fields = [
-            'user',
-            'prod',
-            'created_at'
+            'fav_user',
+            'fav_prod',
+            'fav_created_at'
         ]
 
 

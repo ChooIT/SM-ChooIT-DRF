@@ -122,12 +122,13 @@ def make_user_preference(user):
 def get_recommendation_list_based_on_alike_user(request):
     user_preference = make_user_preference(request.user)
     if user_preference is None:
-        product = Product.objects.all()[:5]
-    else:
-        recommendation_list = get_recommendation_list_based_on_user(user_preference)
-        product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
+        return Response({
+            "status": "success",
+            "message": "아직 제품 평가가 없어서 추천해줄 수 없습니다"
+        }, status=status.HTTP_200_OK)
+    recommendation_list = get_recommendation_list_based_on_user(user_preference)
+    product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
     serializer = ProductThumbnailSerializer(product, many=True)
-
     return Response({
         "status": "success",
         "message": "나와 비슷한 유저가 좋아하는 제품 기반 추천 리스트 출력 성공",

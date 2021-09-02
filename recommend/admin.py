@@ -89,6 +89,7 @@ class ReviewTagAdmin(admin.ModelAdmin):
         'created_at'
     ]
 
+
 @admin.register(SearchLog)
 class ReviewTagAdmin(admin.ModelAdmin):
     list_display = [
@@ -104,6 +105,15 @@ class EstimateAdmin(admin.ModelAdmin):
         'user',
         'prod',
         'estimate_rate'
+    ]
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = [
+            'fav_user',
+            'fav_prod',
+            'fav_created_at'
     ]
 
 
