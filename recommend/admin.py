@@ -116,11 +116,3 @@ class FavoriteAdmin(admin.ModelAdmin):
             'fav_created_at'
     ]
 
-
-@admin.register(Favorite)
-class EstimateAdmin(admin.ModelAdmin):
-    list_display = [
-        'fav_user',
-        'fav_prod',
-        'fav_created_at'
-    ]
