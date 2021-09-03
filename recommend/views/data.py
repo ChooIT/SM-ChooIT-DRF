@@ -42,10 +42,13 @@ class OptionList(APIView):
             .order_by('classification') \
             .distinct() \
             .values('classification')
-        response = {}
+        response = []
         for item in classifications:
+            data_dict = {}
             classification = item.get('classification')
             queryset = Option.objects.filter(title=title, classification=classification)
             options = OptionSerializer(queryset, many=True)
-            response[classification] = options.data
+            data_dict['classification'] = classification
+            data_dict['options'] = options.data
+            response.append(data_dict)
         return Response(response, status=status.HTTP_200_OK)
