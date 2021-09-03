@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -36,6 +38,14 @@ class OptionList(APIView):
 
     def get(self, request):
         title = request.GET.get('purpose')
-        queryset = Option.objects.filter(title=title)
-        serializer = OptionSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        classifications = Option.objects.all().filter(title=title) \
+            .order_by('classification') \
+            .distinct() \
+            .values('classification')
+        response = {}
+        for item in classifications:
+            classification = item.get('classification')
+            queryset = Option.objects.filter(title=title, classification=classification)
+            options = OptionSerializer(queryset, many=True)
+            response[classification] = options.data
+        return Response(response, status=status.HTTP_200_OK)
