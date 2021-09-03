@@ -59,6 +59,18 @@ class ProductImage(models.Model):
         ordering = ['prod_no', '-prod_is_thumbnail', 'img_no']
 
 
+class ProductTextCloud(models.Model):
+    id = models.AutoField(primary_key=True)
+    prod_no = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='prod_text_clouds')
+    cloud_image = models.ImageField(upload_to=utils.user_directory_path)
+    type = models.CharField(max_length=10, null=True)
+    user_no = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=1)
+    created_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['id', '-created_at']
+
+
 class ProductTag(models.Model):
     prod = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='prod_tags')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
