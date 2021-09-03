@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from recommend.models import Product, Favorite, Review, ReviewImage, SearchLog, ProductTag, Category, ProductImage, \
-    Estimate, Option
+    Estimate, Option, ProductTextCloud
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -11,6 +11,15 @@ class ProductTagSerializer(serializers.ModelSerializer):
         fields = [
             'prod',
             'tag'
+        ]
+
+
+class ProductTextCloudSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductTextCloud
+        fields = [
+            'cloud_image',
+            'type',
         ]
 
 
@@ -28,6 +37,7 @@ class ProductSerializer(serializers.ModelSerializer):
     prod_tags = serializers.StringRelatedField(many=True, read_only=True)
     prod_category = serializers.StringRelatedField()
     prod_images = ProductImageSerializer(many=True, read_only=True)
+    prod_text_clouds = ProductTextCloudSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -39,6 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'prod_price',
             'prod_preference',
             'prod_images',
+            'prod_text_clouds',
             'created_at',
             'updated_at',
             'prod_tags'

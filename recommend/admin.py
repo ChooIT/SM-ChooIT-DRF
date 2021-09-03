@@ -1,6 +1,6 @@
 from django.contrib import admin
 from recommend.models import Category, Product, ProductImage, ProductTag, Review, ReviewImage, ReviewTag, SearchLog, \
-    Estimate, Favorite, Option
+    Estimate, Favorite, Option, ProductTextCloud
 
 
 @admin.register(Category)
@@ -46,6 +46,17 @@ class ProductImageAdmin(admin.ModelAdmin):
         'prod_no',
         'prod_img_path',
         'prod_is_thumbnail',
+        'created_at'
+    )
+
+
+@admin.register(ProductTextCloud)
+class ProductTextCloudAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'prod_no',
+        'cloud_image',
+        'type',
         'created_at'
     )
 
