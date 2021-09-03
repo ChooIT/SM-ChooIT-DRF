@@ -16,7 +16,11 @@ class OptionAdmin(admin.ModelAdmin):
     list_display = [
         'option_id',
         'title',
+        'classification',
+        'subcategory',
         'tag',
+        'flag',
+        'description',
         'created_at'
     ]
 

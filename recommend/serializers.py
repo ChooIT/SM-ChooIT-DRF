@@ -182,6 +182,8 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = [
             'title',
             'classification',
+            'subcategory',
             'tag',
-            'flag'
+            'flag',
+            'description'
         ]
