@@ -92,7 +92,7 @@ def get_item_list_filtered_by_category(request):
     filter_key_list = list(request.GET.keys())
     filter_dict = {}
     for filter_key in filter_key_list:
-        key = {"category": "prod_category__category_name", "case": "prod_tags__tag__tag_text"}.get(filter_key)
+        key = {"category": "prod_category__category_name", "cases": "prod_tags__tag__tag_text"}.get(filter_key)
         filter_dict[key] = request.GET.get(filter_key)
     product = Product.objects.filter(**filter_dict)
     serializer = ProductThumbnailSerializer(product, many=True)
