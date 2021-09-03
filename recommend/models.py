@@ -188,7 +188,6 @@ class Option(models.Model):
     title = models.CharField(max_length=10, null=True)
     category = models.CharField(max_length=10, null=True)
     classification = models.CharField(max_length=10, null=True)
-    subcategory = models.ForeignKey(Tag, null=True, on_delete=models.CASCADE, related_name='subcategory')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     flag = models.BooleanField(default=False)
     description = models.CharField(max_length=5, default='')

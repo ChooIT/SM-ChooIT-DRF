@@ -17,7 +17,6 @@ class OptionAdmin(admin.ModelAdmin):
         'option_id',
         'title',
         'classification',
-        'subcategory',
         'tag',
         'flag',
         'description',
@@ -126,8 +125,8 @@ class EstimateAdmin(admin.ModelAdmin):
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = [
-            'fav_user',
-            'fav_prod',
-            'fav_created_at'
+        'fav_user',
+        'fav_prod',
+        'fav_created_at'
     ]
 
