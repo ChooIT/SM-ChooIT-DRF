@@ -16,6 +16,7 @@ class OptionAdmin(admin.ModelAdmin):
     list_display = [
         'option_id',
         'title',
+        'category',
         'classification',
         'tag',
         'flag',

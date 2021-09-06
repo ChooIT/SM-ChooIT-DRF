@@ -144,6 +144,7 @@ class NicknameArchive(models.Model):
 
 class Tag(models.Model):
     id = models.AutoField(primary_key=True)
+    classification = models.CharField(max_length=10, null=True)
     tag_text = models.CharField(unique=True, max_length=15, null=False)
     description = models.CharField(null=True, max_length=30)
 
