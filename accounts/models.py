@@ -152,7 +152,7 @@ class Tag(models.Model):
         return self.tag_text
 
     class Meta:
-        ordering = ['id']
+        ordering = ['classification']
 
 
 class UserTag(models.Model):
