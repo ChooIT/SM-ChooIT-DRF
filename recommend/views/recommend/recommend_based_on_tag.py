@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from recommend.models import Product, ProductTag, Estimate
 
-PATH = '/Users/sngeunjng/Develops/ChewIT/recommend/views/recommend'
+PATH = ''
 
 
 def make_user_tag_raw_string(user_id):
