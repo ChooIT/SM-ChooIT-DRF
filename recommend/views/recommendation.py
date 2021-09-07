@@ -11,7 +11,7 @@ from recommend.models import SearchLog, Product, Estimate
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
 
-from recommend.views.recommend.recommend_based_on_tag import make_rec
+from recommend.views.recommend.recommend_based_on_tag import make_rec, get_recommendation_list_based_on_tag
 from recommend.views.recommend.recommend_based_on_user import get_recommendation_list_based_on_user
 
 User = get_user_model()
@@ -125,9 +125,8 @@ def get_recommendation_list_based_on_alike_user(request):
             "status": "fail",
             "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
         }, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        recommendation_list = get_recommendation_list_based_on_user(user_preference)
-        product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
+    recommendation_list = get_recommendation_list_based_on_user(user_preference)
+    product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
     serializer = ProductThumbnailSerializer(product, many=True)
 
     return Response({
@@ -141,10 +140,9 @@ def get_recommendation_list_based_on_alike_user(request):
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_item(request):
     # TODO: 추천 로직
-    product = Product.objects.all()[:5]
+    recommendation_list = get_recommendation_list_based_on_tag()
+    product = Product.objects.all().filter(prod_no__in=recommendation_list)[:5]
     serializer = ProductThumbnailSerializer(product, many=True)
-
-    make_rec()
 
     return Response({
         "status": "success",
