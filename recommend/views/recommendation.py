@@ -139,8 +139,7 @@ def get_recommendation_list_based_on_alike_user(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_item(request):
-    # TODO: 추천 로직
-    recommendation_list = get_recommendation_list_based_on_tag()
+    recommendation_list = get_recommendation_list_based_on_tag(request.user.id)
     product = Product.objects.all().filter(prod_no__in=recommendation_list)[:5]
     serializer = ProductThumbnailSerializer(product, many=True)
 

@@ -3,9 +3,19 @@ import os
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from recommend.models import Product, ProductTag
+from recommend.models import Product, ProductTag, Estimate
 
-PATH = ''
+PATH = '/Users/sngeunjng/Develops/ChewIT/recommend/views/recommend'
+
+
+def make_user_tag_raw_string(user_id):
+    tags = ''
+    for estimate in Estimate.objects.all().filter(user_id=user_id).order_by('-estimate_rate')[:5]:
+        prod = estimate.prod
+        for product_tag in ProductTag.objects.all().filter(prod=prod):
+            tag = product_tag.tag.tag_text
+            tags += tag + ' '
+    return tags
 
 
 def make_rec():
@@ -39,14 +49,19 @@ def get_recommendations(idx, cosine_sim, tag_df):
     return tag_df.iloc[movie_indices]
 
 
-def get_recommendation_list_based_on_tag():
+def get_recommendation_list_based_on_tag(user_id):
     tfidf = TfidfVectorizer()
 
     path = os.path.join(PATH, 'prod_tag.txt')
     tag_df = pd.read_csv(path)
+    tag_df = tag_df.append({
+        'id': len(tag_df) + 1,
+        'category': 'user',
+        'raw_tag': make_user_tag_raw_string(user_id)
+    }, ignore_index=True)
     tag_df['raw_tag'] = tag_df['raw_tag'].fillna('')
-    tfidf_matrix = tfidf.fit_transform(tag_df['raw_tag'])
 
+    tfidf_matrix = tfidf.fit_transform(tag_df['raw_tag'])
     # 코사인 유사도
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-    return list(get_recommendations(1, cosine_sim, tag_df)['id'])
+    return list(get_recommendations(0, cosine_sim, tag_df)['id'])
