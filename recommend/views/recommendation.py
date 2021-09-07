@@ -102,14 +102,17 @@ def get_item_list_filtered_by_category(request):
     }, status=status.HTTP_200_OK)
 
 
+def get_estimate_count(user_id):
+    if Estimate.objects.all().filter(user_id=user_id).count() == 0:
+        return False
+    return True
+
+
 def make_user_preference(user):
     number_of_products = Product.objects.all().count() + 1
     keys = [str(index) for index in range(1, number_of_products)]
     values = ['' for number in range(1, number_of_products)]
     user_preference_dict = dict(zip(keys, values))
-
-    if Estimate.objects.all().filter(user=user).count() == 0:
-        return None
 
     for estimate in Estimate.objects.all().filter(user=user):
         user_preference_dict[str(estimate.prod_id)] = estimate.estimate_rate
@@ -119,6 +122,12 @@ def make_user_preference(user):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_user(request):
+    if not get_estimate_count(request.user.id):
+        return Response({
+            "status": "fail",
+            "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     user_preference = make_user_preference(request.user)
     if user_preference is None:
         return Response({
@@ -139,8 +148,14 @@ def get_recommendation_list_based_on_alike_user(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_item(request):
+    if not get_estimate_count(request.user.id):
+        return Response({
+            "status": "fail",
+            "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     recommendation_list = get_recommendation_list_based_on_tag(request.user.id)
-    product = Product.objects.all().filter(prod_no__in=recommendation_list)[:5]
+    product = Product.objects.all().filter(prod_no__in=recommendation_list)
     serializer = ProductThumbnailSerializer(product, many=True)
 
     return Response({
@@ -153,7 +168,12 @@ def get_recommendation_list_based_on_alike_item(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_mix(request):
-    #  TODO: 추천 로직
+    if not get_estimate_count(request.user.id):
+        return Response({
+            "status": "fail",
+            "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     product = Product.objects.all()[:5]
     serializer = ProductThumbnailSerializer(product, many=True)
 
