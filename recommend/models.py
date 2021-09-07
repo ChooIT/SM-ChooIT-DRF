@@ -190,7 +190,7 @@ class Option(models.Model):
     classification = models.CharField(max_length=15, null=True)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     flag = models.BooleanField(default=False)
-    description = models.CharField(max_length=5, default='')
+    description = models.CharField(max_length=5, null=True)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
