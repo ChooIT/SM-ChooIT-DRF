@@ -9,6 +9,7 @@ from accounts.models import Tag
 from accounts.serializers import TagSerializer
 from recommend.models import Category, Option
 from recommend.serializers import CategorySerializer, OptionSerializer
+from recommend.views.recommend.recommend_based_on_tag import make_rec
 
 
 class CategoryList(APIView):
@@ -54,3 +55,11 @@ class OptionList(APIView):
             data.append(data_dict)
         response = {'data': data}
         return Response(response, status=status.HTTP_200_OK)
+
+
+class FileList(APIView):
+    def get(self, request):
+        make_rec()
+        return Response({
+            "status": "성공"
+        }, status=status.HTTP_200_OK)

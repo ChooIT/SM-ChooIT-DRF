@@ -28,4 +28,6 @@ urlpatterns = [
     path('tag/', data.TagList.as_view()),
     # option
     path('option/', data.OptionList.as_view()),
+    # make file
+    path('file/', data.FileList.as_view()),
 ]
