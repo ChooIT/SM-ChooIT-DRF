@@ -197,5 +197,5 @@ class Option(models.Model):
         return "[{%s}] %s" % (self.title, self.tag.tag_text)
 
     class Meta:
-        unique_together = ['title', 'tag']
+        unique_together = ['title', 'category', 'tag']
         ordering = ['title', 'option_id']
