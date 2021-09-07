@@ -187,7 +187,7 @@ class Option(models.Model):
     option_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=10, null=True)
     category = models.CharField(max_length=10, null=True)
-    classification = models.CharField(max_length=10, null=True)
+    classification = models.CharField(max_length=15, null=True)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     flag = models.BooleanField(default=False)
     description = models.CharField(max_length=5, default='')
