@@ -38,6 +38,7 @@ class OptionList(APIView):
 
     def get(self, request):
         title = request.GET.get('purpose')
+        category = request.GET.get('category')
         classifications = Option.objects.all().filter(title=title) \
             .order_by('classification') \
             .distinct() \
@@ -46,7 +47,7 @@ class OptionList(APIView):
         for item in classifications:
             data_dict = {}
             classification = item.get('classification')
-            queryset = Option.objects.filter(title=title, classification=classification)
+            queryset = Option.objects.filter(title=title, classification=classification, category=category)
             options = OptionSerializer(queryset, many=True)
             data_dict['classification'] = classification
             data_dict['options'] = options.data
