@@ -11,6 +11,7 @@ from recommend.models import SearchLog, Product, Estimate
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
 
+from recommend.views.recommend.recommend_based_on_tag import make_rec
 from recommend.views.recommend.recommend_based_on_user import get_recommendation_list_based_on_user
 
 User = get_user_model()
@@ -139,6 +140,8 @@ def get_recommendation_list_based_on_alike_item(request):
     # TODO: 추천 로직
     product = Product.objects.all()[:5]
     serializer = ProductThumbnailSerializer(product, many=True)
+
+    make_rec()
 
     return Response({
         "status": "success",
