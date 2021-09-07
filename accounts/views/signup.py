@@ -58,9 +58,7 @@ def create_user(request):
 def upgrade_active_level(user_email):
     try:
         user = User.objects.get(email=user_email)
-        user.active_level += 1
-        if user.active_level == 2:
-            user.is_active = 't'
+        user.is_active = 't'
         user.save()
         return user.active_level, True
     except User.DoesNotExist:
