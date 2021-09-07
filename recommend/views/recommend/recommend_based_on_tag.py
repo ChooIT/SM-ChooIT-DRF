@@ -60,11 +60,7 @@ def get_recommendation_list_based_on_tag(user_id):
     user_tag = make_user_tag_raw_string(user_id)
 
     tag_df = pd.read_csv(PATH)
-    tag_df = tag_df.append({
-        'id': len(tag_df) + 1,
-        'category': 'user',
-        'raw_tag': user_tag
-    }, ignore_index=True)
+    tag_df.at[0, 'raw_tag'] = user_tag
     tag_df['raw_tag'] = tag_df['raw_tag'].fillna('')
 
     tfidf_matrix = tfidf.fit_transform(tag_df['raw_tag'])
