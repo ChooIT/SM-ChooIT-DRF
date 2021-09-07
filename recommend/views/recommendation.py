@@ -121,7 +121,10 @@ def make_user_preference(user):
 def get_recommendation_list_based_on_alike_user(request):
     user_preference = make_user_preference(request.user)
     if user_preference is None:
-        product = Product.objects.all()[:5]
+        return Response({
+            "status": "fail",
+            "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
+        }, status=status.HTTP_400_BAD_REQUEST)
     else:
         recommendation_list = get_recommendation_list_based_on_user(user_preference)
         product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
