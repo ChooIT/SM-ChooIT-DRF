@@ -5,11 +5,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from recommend.models import Product, ProductTag, Estimate
 
-PATH = '/Users/sngeunjng/Develops/ChewIT/recommend/views/recommend'
+PATH = os.getenv('FILE_PATH')
 
 
 def make_user_tag_raw_string(user_id):
     tags = ''
+
     for estimate in Estimate.objects.all().filter(user_id=user_id).order_by('-estimate_rate')[:5]:
         prod = estimate.prod
         for product_tag in ProductTag.objects.all().filter(prod=prod):
@@ -20,6 +21,10 @@ def make_user_tag_raw_string(user_id):
 
 def make_rec():
     products = pd.DataFrame(columns=['id', 'category', 'raw_tag'])
+    products = products.append({
+        'id': 0,
+        'category': 'user'
+    }, ignore_index=True)
     for product in Product.objects.all():
         raw_tag = ''
         for product_tag in ProductTag.objects.filter(prod_id=product.prod_no):
@@ -52,12 +57,13 @@ def get_recommendations(idx, cosine_sim, tag_df):
 def get_recommendation_list_based_on_tag(user_id):
     tfidf = TfidfVectorizer()
 
-    path = os.path.join(PATH, 'prod_tag.txt')
-    tag_df = pd.read_csv(path)
+    user_tag = make_user_tag_raw_string(user_id)
+
+    tag_df = pd.read_csv(PATH)
     tag_df = tag_df.append({
         'id': len(tag_df) + 1,
         'category': 'user',
-        'raw_tag': make_user_tag_raw_string(user_id)
+        'raw_tag': user_tag
     }, ignore_index=True)
     tag_df['raw_tag'] = tag_df['raw_tag'].fillna('')
 
