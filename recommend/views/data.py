@@ -39,7 +39,7 @@ class OptionList(APIView):
     def get(self, request):
         title = request.GET.get('purpose')
         category = request.GET.get('category')
-        classifications = Option.objects.all().filter(title=title) \
+        classifications = Option.objects.all().filter(title=title, category=category) \
             .order_by('classification') \
             .distinct() \
             .values('classification')
