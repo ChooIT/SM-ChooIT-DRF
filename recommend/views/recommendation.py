@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randint
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -11,7 +11,7 @@ from recommend.models import SearchLog, Product, Estimate
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
 
-from recommend.views.recommend.recommend_based_on_tag import make_rec, get_recommendation_list_based_on_tag
+from recommend.views.recommend.recommend_based_on_tag import get_recommendation_list_based_on_tag
 from recommend.views.recommend.recommend_based_on_user import get_recommendation_list_based_on_user
 
 User = get_user_model()
@@ -102,7 +102,7 @@ def get_item_list_filtered_by_category(request):
     }, status=status.HTTP_200_OK)
 
 
-def get_estimate_count(user_id):
+def is_estimate_exist(user_id):
     if Estimate.objects.all().filter(user_id=user_id).count() == 0:
         return False
     return True
@@ -122,18 +122,13 @@ def make_user_preference(user):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_user(request):
-    if not get_estimate_count(request.user.id):
+    if not is_estimate_exist(request.user.id):
         return Response({
             "status": "fail",
             "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
         }, status=status.HTTP_400_BAD_REQUEST)
 
     user_preference = make_user_preference(request.user)
-    if user_preference is None:
-        return Response({
-            "status": "fail",
-            "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
-        }, status=status.HTTP_400_BAD_REQUEST)
     recommendation_list = get_recommendation_list_based_on_user(user_preference)
     product = Product.objects.all().filter(prod_no__in=recommendation_list[0])
     serializer = ProductThumbnailSerializer(product, many=True)
@@ -148,7 +143,7 @@ def get_recommendation_list_based_on_alike_user(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_alike_item(request):
-    if not get_estimate_count(request.user.id):
+    if not is_estimate_exist(request.user.id):
         return Response({
             "status": "fail",
             "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
@@ -168,14 +163,25 @@ def get_recommendation_list_based_on_alike_item(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_recommendation_list_based_on_mix(request):
-    if not get_estimate_count(request.user.id):
+    if not is_estimate_exist(request.user.id):
         return Response({
             "status": "fail",
             "message": "제품 평가가 이루어진 후에 제품을 추천해줄 수 있어요"
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    product = Product.objects.all()[:5]
-    serializer = ProductThumbnailSerializer(product, many=True)
+    user_preference = make_user_preference(request.user)
+    recommendation_list = get_recommendation_list_based_on_user(user_preference)
+    prod_list = list(recommendation_list[0])
+    prod_list += get_recommendation_list_based_on_tag(request.user.id)
+    print(prod_list)
+
+    mix_recommendation = []
+    for number in range(5):
+        index = randint(0, len(prod_list) - 1)
+        mix_recommendation.append(prod_list[index])
+
+    queryset = Product.objects.all().filter(prod_no__in=mix_recommendation)
+    serializer = ProductThumbnailSerializer(queryset, many=True)
 
     return Response({
         "status": "success",

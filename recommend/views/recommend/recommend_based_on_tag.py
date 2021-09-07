@@ -45,7 +45,7 @@ def get_recommendations(idx, cosine_sim, tag_df):
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
     # 가장 유사한 5개의 영화를 받아옵니다.
-    sim_scores = sim_scores[1:5]
+    sim_scores = sim_scores[1:6]
 
     # 가장 유사한 10개의 영화의 인덱스를 받아옵니다.
     movie_indices = [i[0] for i in sim_scores]
