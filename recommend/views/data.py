@@ -37,7 +37,7 @@ class OptionList(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        title = request.GET.get('purpose')
+        title = request.GET.get('cases')
         category = request.GET.get('category')
         classifications = Option.objects.all().filter(title=title, category=category) \
             .order_by('classification') \
