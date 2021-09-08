@@ -101,7 +101,9 @@ def get_item_list_filtered_by_category(request):
     return Response({
         "status": "success",
         "message": "카테고리 별 상품 리스트 출력 성공",
-        "data": serializer.data
+        "data": serializer.data,
+        "length": len(cases),
+        "options": cases
     }, status=status.HTTP_200_OK)
 
 
