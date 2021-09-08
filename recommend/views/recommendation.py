@@ -93,12 +93,11 @@ def get_item_list_filtered_by_category(request):
     category = request.GET.get('category')
     cases = request.GET.getlist('cases')
 
-    if len(cases) == 0:
-        cases = Option.objects.all().filter(title=purpose, flag=True).values_list('tag__tag_text')
+    if (len(cases) == 1) and (cases[0] == '게임' or '디자인그래픽' or '문서작업' or '사무용' or '코딩' or '학생'):
+        cases = list(Option.objects.all().filter(title=cases[0], flag=True).values_list('tag__tag_text', flat=True))
     product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
         .values_list('prod_no', flat=True).distinct()
     product = Product.objects.filter(prod_no__in=product)
-
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
         "status": "success",
