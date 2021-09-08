@@ -95,8 +95,10 @@ def get_item_list_filtered_by_category(request):
     purpose = request.GET.get('purpose')
 
     if len(cases) == 0:
-        cases = Option.objects.all().filter(title=purpose, flag=True).values_list('tag__tag_text').distinct()
-    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases).distinct()
+        cases = Option.objects.all().filter(title=purpose, flag=True).values_list('tag__tag_text')
+    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
+        .values_list('prod_no', flat=True).distinct()
+    product = Product.objects.filter(prod_no__in=product)
 
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
