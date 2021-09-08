@@ -92,6 +92,8 @@ def get_item_list_filtered_by_category(request):
     '''
     category = request.GET.get('category')
     cases = request.GET.getlist('cases')
+    if cases is None:
+        cases = False
     # if cases is None:
     #     cases = Option.objects.all().filter(classification=purpose, flag=True).values_list('tag__tag_text').distinct()
     product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)
@@ -99,7 +101,7 @@ def get_item_list_filtered_by_category(request):
     return Response({
         "status": "success",
         "message": "카테고리 별 상품 리스트 출력 성공",
-        "compile": type(cases),
+        "compile": cases,
         "data": serializer.data
     }, status=status.HTTP_200_OK)
 
