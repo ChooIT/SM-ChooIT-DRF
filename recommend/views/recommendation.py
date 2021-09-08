@@ -96,7 +96,8 @@ def get_item_list_filtered_by_category(request):
 
     if len(cases) == 0:
         cases = Option.objects.all().filter(title=purpose, flag=True).values_list('tag__tag_text').distinct()
-    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)
+    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
+        .values('prod_no').distinct()
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
         "status": "success",
