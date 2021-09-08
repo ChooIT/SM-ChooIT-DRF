@@ -49,7 +49,7 @@ def get_item_list_of_the_day(request):
         .order_by('-prod_count') \
         .values_list('prod', flat=True)
     print(most_searched_products)
-    products = Product.objects.all().filter(prod_no__in=most_searched_products)
+    products = Product.objects.all().filter(prod_no__in=most_searched_products)[1:]
     serializer = ProductThumbnailSerializer(products, many=True)
     return Response({
         "status": "success",
