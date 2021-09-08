@@ -98,11 +98,12 @@ def get_item_list_filtered_by_category(request):
         cases = Option.objects.all().filter(title=purpose, flag=True).values_list('tag__tag_text').distinct()
     product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
         .values('prod_no').distinct()
-    serializer = ProductThumbnailSerializer(product, many=True)
+    # serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
         "status": "success",
         "message": "카테고리 별 상품 리스트 출력 성공",
-        "data": serializer.data,
+        # "data": serializer.data,
+        "compile": product
     }, status=status.HTTP_200_OK)
 
 
