@@ -95,9 +95,9 @@ def get_item_list_filtered_by_category(request):
 
     if (len(cases) == 1) and (cases[0] == '게임' or '디자인그래픽' or '문서작업' or '사무용' or '코딩' or '학생'):
         cases = Option.objects.all().filter(title=cases[0], flag=True).values_list('tag__tag_text')
-    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
-        .values_list('prod_no', flat=True).distinct()
-    product = Product.objects.filter(prod_no__in=product)
+    product = Product.objects.filter(prod_category__category_name=category) #, )\
+    for tag in cases:
+        product = product.filter(prod_tags__tag__tag_text=tag)
 
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
