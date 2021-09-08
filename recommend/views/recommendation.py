@@ -23,7 +23,7 @@ def get_user_tags(user_id: int):
         tags = list(UserTag.objects.filter(user=user))
         return tags, True
     except User.DoesNotExist:
-        return list(Tag.objects.all().filter(id__lt=13)), False
+        return list(Tag.objects.all().filter(id__gt=1, id__lt=13)), False
 
 
 def is_already_used(memo, tag):
@@ -49,7 +49,7 @@ def get_item_list_of_the_day(request):
         .order_by('-prod_count') \
         .values_list('prod', flat=True)
     print(most_searched_products)
-    products = Product.objects.all().filter(prod_no__in=most_searched_products)[1:]
+    products = Product.objects.all().filter(prod_no__in=most_searched_products)
     serializer = ProductThumbnailSerializer(products, many=True)
     return Response({
         "status": "success",
@@ -92,12 +92,14 @@ def get_item_list_filtered_by_category(request):
     '''
     category = request.GET.get('category')
     cases = request.GET.getlist('cases')
-    print(cases)
+    # if cases is None:
+    #     cases = Option.objects.all().filter(classification=purpose, flag=True).values_list('tag__tag_text').distinct()
     product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
         "status": "success",
         "message": "카테고리 별 상품 리스트 출력 성공",
+        "compile": type(cases),
         "data": serializer.data
     }, status=status.HTTP_200_OK)
 
