@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from django.db.models import Count
 from accounts.models import UserTag, Tag
-from recommend.models import SearchLog, Product, Estimate
+from recommend.models import SearchLog, Product, Estimate, Option
 from recommend.serializers import ProductThumbnailSerializer
 from django.contrib.auth import get_user_model
 
@@ -92,10 +92,10 @@ def get_item_list_filtered_by_category(request):
     '''
     category = request.GET.get('category')
     cases = request.GET.getlist('cases')
-    if cases is None:
-        cases = False
-    # if cases is None:
-    #     cases = Option.objects.all().filter(classification=purpose, flag=True).values_list('tag__tag_text').distinct()
+    purpose = request.GET.get('purpose')
+
+    if len(cases) == 0:
+        cases = Option.objects.all().filter(classification=purpose, flag=True).values_list('tag__tag_text').distinct()
     product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
