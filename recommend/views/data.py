@@ -68,7 +68,7 @@ class FileList(APIView):
 class AddProductTagView(APIView):
     def post(self, request):
         prod_id = request.data.get('prod_id')
-        tag_id = request.data.get('tag')
+        tag_id = request.data.get('tag_id')
 
         ProductTag.objects.create(
             prod_id=prod_id,
