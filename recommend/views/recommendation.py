@@ -1,3 +1,5 @@
+import operator
+from functools import reduce
 from random import choice, randint
 
 from rest_framework import status
@@ -5,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from django.db.models import Count
+from django.db.models import Count, Q
 from accounts.models import UserTag, Tag
 from recommend.models import SearchLog, Product, Estimate, Option
 from recommend.serializers import ProductThumbnailSerializer
@@ -83,6 +85,20 @@ def tag_filtering_product_list(request):
     }, status=status.HTTP_200_OK)
 
 
+def get_classifying_tags(cases):
+    classified_tags = [[cases[0][1]]]
+    etc_tags = []
+    for i in range(1, len(cases)):
+        if cases[i][0] == '기타':
+            etc_tags.append(cases[i][1])
+            continue
+        if cases[i - 1][0] == cases[i][0]:
+            classified_tags[-1].append(cases[i][1])
+        else:
+            classified_tags.append([cases[i][1]])
+    return classified_tags, etc_tags
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_item_list_filtered_by_category(request):
@@ -92,12 +108,17 @@ def get_item_list_filtered_by_category(request):
     '''
     category = request.GET.get('category')
     cases = request.GET.getlist('cases')
-
+    
     if (len(cases) == 1) and (cases[0] == '게임' or '디자인그래픽' or '문서작업' or '사무용' or '코딩' or '학생'):
         cases = list(Option.objects.all().filter(title=cases[0], flag=True).values_list('tag__tag_text', flat=True))
-    product = Product.objects.filter(prod_category__category_name=category, prod_tags__tag__tag_text__in=cases)\
+    product = Product.objects.filter(
+            prod_category__category_name=category, 
+            prod_tags__tag__tag_text__in=cases)\
         .values_list('prod_no', flat=True).distinct()
     product = Product.objects.filter(prod_no__in=product)
+
+    if cases[0] == '학생':
+        product = product.objects.exclude(prod_tags__tag__id__in=[202, 213])
     serializer = ProductThumbnailSerializer(product, many=True)
     return Response({
         "status": "success",
