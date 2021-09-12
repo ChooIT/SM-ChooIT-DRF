@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from accounts.models import Tag
 from accounts.serializers import TagSerializer
-from recommend.models import Category, Option
+from recommend.models import Category, Option, ProductTag
 from recommend.serializers import CategorySerializer, OptionSerializer
 from recommend.views.recommend.recommend_based_on_tag import make_rec
 
@@ -63,3 +63,15 @@ class FileList(APIView):
         return Response({
             "status": "성공"
         }, status=status.HTTP_200_OK)
+
+
+class AddProductTagView(APIView):
+    def post(self, request):
+        prod_id = request.data.get('prod_id')
+        tag_id = request.data.get('tag')
+
+        ProductTag.objects.create(
+            prod_id=prod_id,
+            tag_id=tag_id
+        )
+        return Response(status=status.HTTP_200_OK)

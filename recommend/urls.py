@@ -30,4 +30,6 @@ urlpatterns = [
     path('option/', data.OptionList.as_view()),
     # make file
     path('file/', data.FileList.as_view()),
+    # make product tag
+    path('product_tag/', data.AddProductTagView.as_view()),
 ]
