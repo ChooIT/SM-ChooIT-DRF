@@ -118,7 +118,7 @@ class ReviewUserSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    review_img_thumbnail = serializers.PrimaryKeyRelatedField(queryset=ReviewImage.objects.all(), write_only=True)
+    review_img_thumbnail = serializers.PrimaryKeyRelatedField(queryset=ReviewImage.objects.all(), write_only=True, required=True)
     thumbnail_detail = ReviewImageSerializer(source='review_img_thumbnail', read_only=True)
     review_tags = serializers.StringRelatedField(read_only=True, many=True)
     user_no = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
