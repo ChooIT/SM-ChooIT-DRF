@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-from random import choice, randint
+from random import choice, randint, shuffle
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -112,9 +112,10 @@ def get_item_list_filtered_by_category(request):
     if (len(cases) == 1) and (cases[0] == '게임' or '디자인그래픽' or '문서작업' or '사무용' or '코딩' or '학생'):
         cases = list(Option.objects.all().filter(title=cases[0], flag=True).values_list('tag__tag_text', flat=True))
     product = Product.objects.filter(
-            prod_category__category_name=category, 
+            prod_category__category_name=category,
             prod_tags__tag__tag_text__in=cases)\
         .values_list('prod_no', flat=True).distinct()
+    shuffle(product)
     product = Product.objects.filter(prod_no__in=product)
 
     if cases[0] == '학생':
