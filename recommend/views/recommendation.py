@@ -115,7 +115,6 @@ def get_item_list_filtered_by_category(request):
             prod_category__category_name=category,
             prod_tags__tag__tag_text__in=cases)\
         .values_list('prod_no', flat=True).distinct()
-    shuffle(product)
     product = Product.objects.filter(prod_no__in=product)
 
     if cases[0] == '학생':
